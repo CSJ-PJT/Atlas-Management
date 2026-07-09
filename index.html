@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Atlas 서비스 통합 포털. Travel, Learn, Health, Incruit Atlas로 바로 이동합니다."
+    />
+    <title>Atlas Management</title>
+    <link rel="stylesheet" href="/atlas-management.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">ATLAS MANAGEMENT</p>
+          <h1 id="page-title">Atlas 서비스 포털</h1>
+          <p class="hero-copy">
+            여러 Atlas 서비스를 한 곳에서 확인하고 운영 화면으로 바로 이동할 수 있는
+            가벼운 컨트롤 데스크.
+          </p>
+        </div>
+        <aside class="status-panel" aria-label="Atlas 서비스 상태">
+          <span>운영 대시보드</span>
+          <strong>4</strong>
+          <p>Travel, Learn, Health, Incruit</p>
+          <div class="status-chip-wrap" aria-label="운영중 서비스 목록">
+            <span class="status-chip">Travel Atlas</span>
+            <span class="status-chip">Learn Atlas</span>
+            <span class="status-chip">Health Atlas</span>
+            <span class="status-chip">Incruit Atlas</span>
+          </div>
+        </aside>
+      </section>
+
+      <section class="summary-grid" aria-label="서비스 요약">
+        <article>
+          <span class="signal ok"></span>
+          <div>
+            <small>전체 상태</small>
+            <strong>운영 대기</strong>
+          </div>
+        </article>
+        <article>
+          <span class="signal"></span>
+          <div>
+            <small>서비스 수</small>
+            <strong>4개 등록</strong>
+          </div>
+        </article>
+        <article>
+          <span class="signal"></span>
+          <div>
+            <small>확장 구조</small>
+            <strong>모듈형 카드</strong>
+          </div>
+        </article>
+      </section>
+
+      <section class="service-grid" aria-label="Atlas 서비스 목록">
+        <a class="service-card travel" href="/travel/">
+          <span class="service-mark">T</span>
+          <div class="service-body">
+            <small>Travel Atlas</small>
+            <h2>여행 지도 관리</h2>
+            <p>여행 일정과 장소, 이동 경로를 지도 위에 시각화하는 여행 관리 서비스</p>
+          </div>
+          <div class="service-meta">
+            <span class="status">운영 중</span>
+            <span class="status-path">/travel/</span>
+          </div>
+        </a>
+
+        <a class="service-card learn" href="/learn/">
+          <span class="service-mark">L</span>
+          <div class="service-body">
+            <small>Learn Atlas</small>
+            <h2>학습 훈련 플랫폼</h2>
+            <p>백엔드 지식과 면접·설계 역량을 훈련하는 학습 플랫폼</p>
+          </div>
+          <div class="service-meta">
+            <span class="status">운영 중</span>
+            <span class="status-path">/learn/</span>
+          </div>
+        </a>
+
+        <a class="service-card health" href="/health/">
+          <span class="service-mark">H</span>
+          <div class="service-body">
+            <small>Health Atlas</small>
+            <h2>헬스 대시보드</h2>
+            <p>건강·운동·수면 데이터를 매일 기록하고 분석하는 헬스 대시보드</p>
+          </div>
+          <div class="service-meta">
+            <span class="status">운영 중</span>
+            <span class="status-path">/health/</span>
+          </div>
+        </a>
+
+        <a class="service-card incruit" href="/jobs/">
+          <span class="service-mark">J</span>
+          <div class="service-body">
+            <small>INCRUIT ATLAS</small>
+            <h2>채용 공고 레이더</h2>
+            <p>백엔드·AX 백엔드 채용 공고를 수집하고 Slack 알림과 지원 상태 관리를 제공하는 채용 관제 서비스</p>
+          </div>
+          <div class="service-meta">
+            <span class="status">운영 중</span>
+            <span class="status-path">/jobs/</span>
+          </div>
+        </a>
+      </section>
+    </main>
+  </body>
+</html>
