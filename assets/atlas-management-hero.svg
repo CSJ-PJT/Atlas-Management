@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">Atlas Management README Hero</title>
+  <desc id="desc">Atlas Management portal banner with Atlas logo, service cards, and operation status panels.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f8fbff"/>
+      <stop offset=".52" stop-color="#eef6fb"/>
+      <stop offset="1" stop-color="#e7edf7"/>
+    </linearGradient>
+    <linearGradient id="navy" x1="120" y1="340" x2="460" y2="34" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#07152f"/>
+      <stop offset=".58" stop-color="#0b2741"/>
+      <stop offset="1" stop-color="#087ea4"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="86" y1="306" x2="316" y2="76" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#06b6d4"/>
+      <stop offset="1" stop-color="#07152f"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-30%" width="140%" height="160%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#0f172a" flood-opacity=".14"/>
+    </filter>
+    <filter id="soft" x="-20%" y="-30%" width="140%" height="160%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#0284c7" flood-opacity=".16"/>
+    </filter>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M28 0H0v28" fill="none" stroke="#d7e3ee" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="420" rx="34" fill="url(#bg)"/>
+  <rect width="1200" height="420" rx="34" fill="url(#grid)" opacity=".42"/>
+
+  <path d="M0 310C168 260 260 386 420 328c160-58 248-190 418-156 124 24 208 118 362 72v176H0Z" fill="#dcecf6" opacity=".7"/>
+  <path d="M894 32h210c32 0 58 26 58 58v154c0 32-26 58-58 58H894c-32 0-58-26-58-58V90c0-32 26-58 58-58Z" fill="#ffffff" opacity=".72"/>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="58" width="248" height="248" rx="40" fill="#ffffff"/>
+    <rect x="92" y="80" width="204" height="204" rx="34" fill="#f8fbff"/>
+    <path d="M149 126a83 83 0 0 1 90 0" fill="none" stroke="url(#cyan)" stroke-width="15" stroke-linecap="round"/>
+    <path d="M245 132a83 83 0 0 1 0 90" fill="none" stroke="url(#cyan)" stroke-width="15" stroke-linecap="round"/>
+    <path d="M239 239a83 83 0 0 1-90 0" fill="none" stroke="url(#cyan)" stroke-width="15" stroke-linecap="round"/>
+    <path d="M143 232a83 83 0 0 1 0-90" fill="none" stroke="url(#cyan)" stroke-width="15" stroke-linecap="round"/>
+    <path d="M194 88l9 28h-18l9-28Z" fill="#07152f"/>
+    <path d="M288 182l-28 9v-18l28 9Z" fill="#07152f"/>
+    <path d="M194 276l-9-28h18l-9 28Z" fill="#07152f"/>
+    <path d="M100 182l28-9v18l-28-9Z" fill="#07152f"/>
+    <circle cx="194" cy="126" r="16" fill="#06a9cf" stroke="#f8fbff" stroke-width="6"/>
+    <circle cx="250" cy="182" r="16" fill="#06a9cf" stroke="#f8fbff" stroke-width="6"/>
+    <circle cx="194" cy="238" r="16" fill="#06a9cf" stroke="#f8fbff" stroke-width="6"/>
+    <circle cx="138" cy="182" r="16" fill="#06a9cf" stroke="#f8fbff" stroke-width="6"/>
+    <path d="M141 222 194 126l54 96h-34l-20-37-20 37h-33Z" fill="url(#navy)"/>
+    <path d="M179 232l15-29 15 29h-30Z" fill="#06b6d4"/>
+  </g>
+
+  <g>
+    <text x="360" y="118" fill="#07152f" font-family="Inter, Segoe UI, Noto Sans KR, sans-serif" font-size="54" font-weight="850" letter-spacing="0">Atlas Management</text>
+    <text x="362" y="156" fill="#4d6276" font-family="Inter, Segoe UI, Noto Sans KR, sans-serif" font-size="20" font-weight="650">Atlas 서비스군을 한 화면에서 진입하고 운영 상태를 확인하는 통합 포털</text>
+    <g transform="translate(360 186)">
+      <rect width="126" height="34" rx="17" fill="#07152f"/>
+      <text x="20" y="23" fill="#ffffff" font-family="Inter, Segoe UI, Noto Sans KR, sans-serif" font-size="13" font-weight="800">ROOT /</text>
+      <rect x="140" width="138" height="34" rx="17" fill="#e9f7fb" stroke="#b7dce8"/>
+      <circle cx="160" cy="17" r="5" fill="#16a34a"/>
+      <text x="174" y="23" fill="#0b2741" font-family="Inter, Segoe UI, Noto Sans KR, sans-serif" font-size="13" font-weight="800">운영 정상</text>
+      <rect x="294" width="160" height="34" rx="17" fill="#fff7ed" stroke="#fed7aa"/>
+      <text x="316" y="23" fill="#9a5a12" font-family="Inter, Segoe UI, Noto Sans KR, sans-serif" font-size="13" font-weight="800">4 Services</text>
+    </g>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="360" y="252" width="170" height="90" rx="18" fill="#ffffff"/>
+    <rect x="382" y="276" width="42" height="42" rx="12" fill="#e0f2fe"/>
+    <text x="396" y="304" fill="#0369a1" font-family="Inter, Segoe UI, sans-serif" font-size="20" font-weight="850">T</text>
+    <text x="438" y="288" fill="#07152f" font-family="Inter, Segoe UI, sans-serif" font-size="15" font-weight="850">Travel</text>
+    <text x="438" y="312" fill="#64748b" font-family="Inter, Segoe UI, Noto Sans KR, sans-serif" font-size="12" font-weight="650">지도 · 경로</text>
+
+    <rect x="546" y="252" width="170" height="90" rx="18" fill="#ffffff"/>
+    <rect x="568" y="276" width="42" height="42" rx="12" fill="#eef2ff"/>
+    <text x="582" y="304" fill="#4f46e5" font-family="Inter, Segoe UI, sans-serif" font-size="20" font-weight="850">L</text>
+    <text x="624" y="288" fill="#07152f" font-family="Inter, Segoe UI, sans-serif" font-size="15" font-weight="850">Learn</text>
+    <text x="624" y="312" fill="#64748b" font-family="Inter, Segoe UI, Noto Sans KR, sans-serif" font-size="12" font-weight="650">학습 · 면접</text>
+
+    <rect x="732" y="252" width="170" height="90" rx="18" fill="#ffffff"/>
+    <rect x="754" y="276" width="42" height="42" rx="12" fill="#ecfdf5"/>
+    <text x="768" y="304" fill="#059669" font-family="Inter, Segoe UI, sans-serif" font-size="20" font-weight="850">H</text>
+    <text x="810" y="288" fill="#07152f" font-family="Inter, Segoe UI, sans-serif" font-size="15" font-weight="850">Health</text>
+    <text x="810" y="312" fill="#64748b" font-family="Inter, Segoe UI, Noto Sans KR, sans-serif" font-size="12" font-weight="650">건강 · 루틴</text>
+
+    <rect x="918" y="252" width="170" height="90" rx="18" fill="#ffffff"/>
+    <rect x="940" y="276" width="42" height="42" rx="12" fill="#fff7ed"/>
+    <text x="954" y="304" fill="#b45309" font-family="Inter, Segoe UI, sans-serif" font-size="20" font-weight="850">J</text>
+    <text x="996" y="288" fill="#07152f" font-family="Inter, Segoe UI, sans-serif" font-size="15" font-weight="850">Incruit</text>
+    <text x="996" y="312" fill="#64748b" font-family="Inter, Segoe UI, Noto Sans KR, sans-serif" font-size="12" font-weight="650">채용 · 알림</text>
+  </g>
+
+  <g filter="url(#soft)">
+    <rect x="878" y="74" width="244" height="128" rx="22" fill="#07152f"/>
+    <text x="902" y="108" fill="#67e8f9" font-family="Inter, Segoe UI, sans-serif" font-size="13" font-weight="850">ATLAS OPS</text>
+    <text x="902" y="142" fill="#ffffff" font-family="Inter, Segoe UI, sans-serif" font-size="28" font-weight="850">/api/health</text>
+    <circle cx="908" cy="174" r="6" fill="#22c55e"/>
+    <text x="924" y="180" fill="#cbd5e1" font-family="Inter, Segoe UI, Noto Sans KR, sans-serif" font-size="14" font-weight="700">서비스 상태 확인</text>
+    <path d="M1066 92v92" stroke="#164e63" stroke-width="1"/>
+    <path d="M1087 104v68" stroke="#06b6d4" stroke-width="6" stroke-linecap="round"/>
+    <path d="M1104 126v46" stroke="#38bdf8" stroke-width="6" stroke-linecap="round"/>
+  </g>
+</svg>
