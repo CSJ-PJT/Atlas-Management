@@ -78,8 +78,15 @@ a {
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: #111827;
-  font-size: 18px;
+  background: #f8fbff;
+  box-shadow: 0 8px 20px rgba(7, 21, 47, 0.16);
+  overflow: hidden;
+}
+
+.brand-mark img {
+  width: 30px;
+  height: 30px;
+  display: block;
 }
 
 .brand strong,

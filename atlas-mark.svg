@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Atlas logo mark">
+  <defs>
+    <linearGradient id="atlas-ring" x1="10" y1="54" x2="54" y2="10" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#06b6d4"/>
+      <stop offset=".52" stop-color="#0ea5c6"/>
+      <stop offset="1" stop-color="#07152f"/>
+    </linearGradient>
+    <linearGradient id="atlas-a" x1="18" y1="52" x2="44" y2="16" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0b1b35"/>
+      <stop offset="1" stop-color="#07152f"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#f8fbff"/>
+  <path d="M18.4 16.8a25.2 25.2 0 0 1 27.2 0" fill="none" stroke="url(#atlas-ring)" stroke-width="4.8" stroke-linecap="round"/>
+  <path d="M47.2 18.4a25.2 25.2 0 0 1 0 27.2" fill="none" stroke="url(#atlas-ring)" stroke-width="4.8" stroke-linecap="round"/>
+  <path d="M45.6 47.2a25.2 25.2 0 0 1-27.2 0" fill="none" stroke="url(#atlas-ring)" stroke-width="4.8" stroke-linecap="round"/>
+  <path d="M16.8 45.6a25.2 25.2 0 0 1 0-27.2" fill="none" stroke="url(#atlas-ring)" stroke-width="4.8" stroke-linecap="round"/>
+  <path d="M32 4.8l3.1 9.6h-6.2L32 4.8Z" fill="#07152f"/>
+  <path d="M59.2 32l-9.6 3.1v-6.2L59.2 32Z" fill="#07152f"/>
+  <path d="M32 59.2l-3.1-9.6h6.2L32 59.2Z" fill="#07152f"/>
+  <path d="M4.8 32l9.6-3.1v6.2L4.8 32Z" fill="#07152f"/>
+  <circle cx="32" cy="15.7" r="4.4" fill="#06a9cf" stroke="#f8fbff" stroke-width="2"/>
+  <circle cx="48.3" cy="32" r="4.4" fill="#06a9cf" stroke="#f8fbff" stroke-width="2"/>
+  <circle cx="32" cy="48.3" r="4.4" fill="#06a9cf" stroke="#f8fbff" stroke-width="2"/>
+  <circle cx="15.7" cy="32" r="4.4" fill="#06a9cf" stroke="#f8fbff" stroke-width="2"/>
+  <path d="M16.8 43.8 31.9 17l15.3 26.8H38L32 32.5l-6.1 11.3h-9.1Z" fill="url(#atlas-a)"/>
+  <path d="M27.7 45.6 32 37.2l4.3 8.4h-8.6Z" fill="#06b6d4"/>
+</svg>
