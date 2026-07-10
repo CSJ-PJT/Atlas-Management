@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="atlas-logo.png" width="420" alt="Atlas Logo" />
+  <img src="docs/brand/atlas-management-lockup.svg" width="900" alt="Atlas Management" />
 </p>
 
 # Atlas-Management
@@ -77,8 +77,10 @@ Service Routing
 ```text
 Atlas-Management/
 ├── docs/
-│   └── architecture/
-│       └── atlas-project-architecture.png
+│   ├── architecture/
+│   │   └── atlas-project-architecture.png
+│   └── brand/
+│       └── atlas-management-lockup.svg
 ├── index.html
 ├── atlas-management.css
 ├── atlas-logo.png
@@ -91,12 +93,13 @@ Atlas-Management/
 
 | Asset | Purpose |
 | --- | --- |
-| `atlas-logo.png` | GitHub README 상단 Atlas 원본 로고 |
+| `docs/brand/atlas-management-lockup.svg` | GitHub README 상단 Atlas-Management 전용 브랜드 lockup |
+| `atlas-logo.png` | Gmail `Atlas Logo` 원본 로고 기준 자산 |
 | `docs/architecture/atlas-project-architecture.png` | Atlas 전체 프로젝트 구조 이미지 |
 | `atlas-mark.svg` | 웹 헤더와 favicon용 Atlas 마크 |
 | `atlas-mark.png` | Apple touch icon, 북마크 이미지 |
 
-README 상단 로고는 Gmail `Atlas Logo` 제목의 원본 이미지와 동일한 `atlas-logo.png`를 사용합니다. 해시 기준으로 현재 저장소 이미지와 Gmail 첨부 로고가 동일함을 확인했습니다.
+README 상단에는 원본 Atlas 로고를 그대로 붙이지 않고, Atlas 마크의 구조를 해치지 않는 범위에서 `Atlas Management` 전용 lockup을 사용합니다. 기준 원본은 Gmail `Atlas Logo` 제목의 이미지와 동일한 `atlas-logo.png`이며, 해시 기준으로 현재 저장소 이미지와 Gmail 첨부 로고가 동일함을 확인했습니다.
 
 ## Local Run
 
