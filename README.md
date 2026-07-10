@@ -1,12 +1,15 @@
-<p align="center">
-  <img src="atlas-logo.png" width="260" alt="Atlas Logo" />
-</p>
-
-<h1 align="center">ATLAS MANAGEMENT</h1>
-
-<p align="center">
-  <strong>Service Portal · Operations Home · Control Desk</strong>
-</p>
+<table align="center">
+  <tr>
+    <td align="center" width="220">
+      <img src="atlas-logo.png" width="180" alt="Atlas Logo" />
+    </td>
+    <td>
+      <h1>ATLAS MANAGEMENT</h1>
+      <p><strong>Service Portal · Operations Home · Control Desk</strong></p>
+      <p>Atlas service group entrypoint for operations and navigation.</p>
+    </td>
+  </tr>
+</table>
 
 # Atlas-Management
 
@@ -102,7 +105,7 @@ Atlas-Management/
 | `atlas-mark.svg` | 웹 헤더와 favicon용 Atlas 마크 |
 | `atlas-mark.png` | Apple touch icon, 북마크 이미지 |
 
-README 상단은 Gmail `Atlas Logo` 제목의 원본 이미지와 동일한 `atlas-logo.png`를 그대로 사용합니다. 로고 그림은 변형하지 않고, `ATLAS MANAGEMENT` 텍스트를 별도로 배치해 Management 전용 브랜드 구성을 만듭니다. 해시 기준으로 현재 저장소 이미지와 Gmail 첨부 로고가 동일함을 확인했습니다.
+README 상단은 Gmail `Atlas Logo` 제목의 원본 이미지와 동일한 `atlas-logo.png`를 그대로 사용합니다. 로고 그림은 재작도, 색상 변경, 크롭 없이 원본 파일을 직접 배치하고, 옆의 `ATLAS MANAGEMENT` 타이포그래피로 Management 전용 브랜드 lockup을 구성합니다. 해시 기준으로 현재 저장소 이미지와 Gmail 첨부 로고가 동일함을 확인했습니다.
 
 ## Local Run
 
