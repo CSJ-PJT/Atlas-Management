@@ -8,7 +8,7 @@
 
 # Atlas-Management
 
-Atlas-Management는 여러 Atlas 서비스를 하나의 루트 포털에서 확인하고 진입하는 정적 운영 홈입니다.
+> Atlas-Management는 여러 Atlas 서비스를 하나의 루트 포털에서 확인하고 진입하는 정적 운영 홈입니다.
 
 <p align="center">
   <img src="docs/brand/atlas-management-lockup.svg" width="900" alt="Atlas Management" />
