@@ -1,0 +1,103 @@
+name: Finalize architecture diagram
+
+on:
+  push:
+    branches:
+      - automation/architecture-readme-refresh
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Rebuild architecture image
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p docs/architecture
+          cat \
+            .architecture-upload/chunk-01.txt \
+            .architecture-upload/chunk-02.txt \
+            .architecture-upload/chunk-03.txt \
+            .architecture-upload/chunk-04.txt \
+            .architecture-upload/chunk-05.txt \
+            .architecture-upload/chunk-06.txt \
+            .architecture-upload/chunk-07.txt \
+            .architecture-upload/chunk-08.txt \
+            .architecture-upload/chunk-09.txt \
+            .architecture-upload/chunk-10.txt \
+            .architecture-upload/chunk-11.txt \
+            .architecture-upload/chunk-12.txt \
+            .architecture-upload/chunk-13.txt \
+            | base64 --decode > docs/architecture/atlas-project-architecture.webp
+          echo "c0dca0a86a42e4ed0a891fdbdacec5d5f8739fdea44ed55f83a2d6233629637e  docs/architecture/atlas-project-architecture.webp" | sha256sum -c -
+
+      - name: Move architecture image to README top
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path("README.md")
+          text = path.read_text(encoding="utf-8")
+
+          new_block = (
+              '<p align="center">\n'
+              '  <img src="docs/architecture/atlas-project-architecture.webp" '
+              'width="900" alt="Atlas 프로젝트 아키텍처" />\n'
+              '</p>'
+          )
+
+          text = re.sub(
+              r'\n## Project Architecture\n\n<p align="center">\n'
+              r'  <img src="docs/architecture/atlas-project-architecture\.png"'
+              r'[^>]*>\n</p>\n',
+              '\n',
+              text,
+              count=1,
+          )
+
+          text = text.replace(
+              "docs/architecture/atlas-project-architecture.png",
+              "docs/architecture/atlas-project-architecture.webp",
+          )
+
+          lockup = (
+              '<p align="center">\n'
+              '  <img src="docs/brand/atlas-management-lockup.svg" '
+              'width="900" alt="Atlas Management" />\n'
+              '</p>'
+          )
+          if new_block not in text:
+              if lockup not in text:
+                  raise SystemExit("Atlas Management lockup block not found")
+              text = text.replace(lockup, lockup + "\n\n" + new_block, 1)
+
+          path.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Remove replaced assets and temporary files
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f docs/architecture/atlas-project-architecture.png
+          rm -rf .architecture-upload
+          rm -f .github/workflows/architecture-upload.yml
+
+      - name: Commit finalized README architecture
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "docs: refresh Atlas project architecture"
+          git push origin HEAD:automation/architecture-readme-refresh
