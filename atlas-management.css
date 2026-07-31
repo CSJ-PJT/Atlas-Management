@@ -400,6 +400,10 @@ h1 {
   --accent: var(--indigo);
 }
 
+.service-card.sketchfy {
+  --accent: #7c3aed;
+}
+
 .service-mark {
   width: 42px;
   height: 42px;
