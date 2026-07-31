@@ -32,9 +32,9 @@ User
   -> Atlas Management (/)
      -> Service Cards
         -> Travel Atlas   (/travel/)
-        -> Learn Atlas    (/learn/)
-        -> Health Atlas   (/health/)
         -> Incruit Atlas  (/jobs/)
+        -> Run Atlas      (/world/)
+        -> Health Atlas   (/health/)
         -> Sketchfy Atlas (/sketchfy/)
      -> Operations Panel
         -> Atlas API      (/api/health)
@@ -44,11 +44,19 @@ User
 | Target | Path | Role |
 | --- | --- | --- |
 | `Travel Atlas` | `/travel/` | 여행 일정, 장소, 좌표, 이동 경로를 지도 위에서 관리 |
-| `Learn Atlas` | `/learn/` | 백엔드 지식, 면접, 설계 역량 학습 |
-| `Health Atlas` | `/health/` | 건강, 운동, 수면 데이터 확인 |
 | `Incruit Atlas` | `/jobs/` | 백엔드·AX 채용 공고 수집, 평가, 알림, 지원 상태 관리 |
+| `Run Atlas` | `/world/` | 학습 콘텐츠와 퀴즈, 피드백 기반의 러닝 서비스 |
+| `Health Atlas` | `/health/` | 건강, 운동, 수면 데이터 확인 |
 | `Sketchfy Atlas` | `/sketchfy/` | 게임/학습 통합형 서비스 |
 | `Atlas API` | `/api/health` | API 상태 확인 |
+
+## Sketchfy Atlas 추가 안내
+
+Sketchfy Atlas는 게임형 학습 포털로, 다음 기능을 제공합니다.
+
+- 게임 세션 기반 점수/결과 화면 제공
+- 단어 학습(초성/정답), 캠페인형 플레이 흐름
+- 채널 이동은 `/sketchfy/` 단일 경로로 진입
 
 ## Platform Flow
 
@@ -175,3 +183,4 @@ Expected behavior:
 4. `/api/health` 외 서비스별 health endpoint 정리
 5. ArchiveOS 이벤트 연동
 6. 서비스 목록을 `services.json`으로 분리
+
