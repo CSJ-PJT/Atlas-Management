@@ -70,14 +70,13 @@ Service Routing
 | `Atlas API` | 서버 상태와 서비스 API 제공 | `/api/` proxy |
 | `ArchiveOS bridge` | 향후 상태/이벤트 관제 연동 | 현재는 구조만 준비 |
 
-
 ## Repository Structure
 
 ```text
 Atlas-Management/
 ├── docs/
 │   ├── architecture/
-│   │   └── atlas-project-architecture.png
+│   │   └── atlas-project-architecture.webp
 │   └── brand/
 │       └── atlas-management-lockup.svg
 ├── index.html
