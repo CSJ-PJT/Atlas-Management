@@ -234,6 +234,20 @@
         </aside>
       </section>
     </main>
+
+    <script>
+      const smoothAnchorLinks = document.querySelectorAll('.nav-links a[href^="#"], .quick-list a[href^="#"]');
+      smoothAnchorLinks.forEach((link) => {
+        link.addEventListener('click', (event) => {
+          const targetSelector = link.getAttribute('href');
+          if (!targetSelector || targetSelector === '#') return;
+          const target = document.querySelector(targetSelector);
+          if (!target) return;
+          event.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    </script>
   </body>
 </html>
 
