@@ -1,8 +1,10 @@
+# Atlas-Project
+
 <p align="center">
   <img src="docs/architecture/atlas-project-architecture.webp" width="900" alt="Atlas 프로젝트 아키텍처" />
 </p>
 
-# Atlas-Project
+========================================================
 
 <p align="center">
   <img src="docs/brand/atlas-management-lockup.svg" width="900" alt="Atlas Management" />
