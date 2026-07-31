@@ -1,18 +1,18 @@
-# Atlas-Project
+# Atlas-Project-Architecture
 
 <p align="center">
   <img src="docs/architecture/atlas-project-architecture.webp" width="900" alt="Atlas 프로젝트 아키텍처" />
 </p>
 
-========================================================
-
-<p align="center">
-  <img src="docs/brand/atlas-management-lockup.svg" width="900" alt="Atlas Management" />
-</p>
+<br/>
 
 # Atlas-Management
 
 Atlas-Management는 여러 Atlas 서비스를 하나의 루트 포털에서 확인하고 진입하는 정적 운영 홈입니다.
+
+<p align="center">
+  <img src="docs/brand/atlas-management-lockup.svg" width="900" alt="Atlas Management" />
+</p>
 
 ## Service Role
 
