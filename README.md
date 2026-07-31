@@ -23,7 +23,7 @@ Atlas-Management는 개별 Atlas 애플리케이션을 실행하거나 데이터
 - 서비스별 목적과 역할 요약
 - API 헬스 체크 경로 노출
 - 신규 Atlas 서비스 추가를 위한 카드형 구조 유지
-- `/travel/`, `/learn/`, `/health/`, `/jobs/`, `/api/` 경로와 책임 분리
+- `/travel/`, `/learn/`, `/health/`, `/jobs/`, `/sketchfy/`, `/api/` 경로와 책임 분리
 
 ## Core Flow
 
@@ -35,6 +35,7 @@ User
         -> Learn Atlas    (/learn/)
         -> Health Atlas   (/health/)
         -> Incruit Atlas  (/jobs/)
+        -> Sketchfy Atlas (/sketchfy/)
      -> Operations Panel
         -> Atlas API      (/api/health)
         -> ArchiveOS-ready status model
@@ -46,6 +47,7 @@ User
 | `Learn Atlas` | `/learn/` | 백엔드 지식, 면접, 설계 역량 학습 |
 | `Health Atlas` | `/health/` | 건강, 운동, 수면 데이터 확인 |
 | `Incruit Atlas` | `/jobs/` | 백엔드·AX 채용 공고 수집, 평가, 알림, 지원 상태 관리 |
+| `Sketchfy Atlas` | `/sketchfy/` | 게임/학습 통합형 서비스 |
 | `Atlas API` | `/api/health` | API 상태 확인 |
 
 ## Platform Flow
@@ -63,6 +65,7 @@ Service Routing
   -> /learn/   -> Backend/Learn Atlas bundle
   -> /health/  -> Health Atlas bundle
   -> /jobs/    -> Incruit Atlas bundle
+  -> /sketchfy/ -> Sketchfy Atlas bundle
   -> /api/     -> Atlas API proxy
 ```
 
@@ -70,7 +73,7 @@ Service Routing
 | --- | --- | --- |
 | `Nginx Root` | 루트 `/` 요청을 Atlas-Management로 제공 | 하위 서비스 alias와 분리 |
 | `Atlas Management` | 서비스 카드, 운영 링크, 상태 요약 표시 | 정적 HTML/CSS |
-| `Service Bundles` | 각 Atlas 앱의 실제 사용자 기능 제공 | `/travel/`, `/learn/`, `/health/`, `/jobs/` |
+| `Service Bundles` | 각 Atlas 앱의 실제 사용자 기능 제공 | `/travel/`, `/learn/`, `/health/`, `/jobs/`, `/sketchfy/` |
 | `Atlas API` | 서버 상태와 서비스 API 제공 | `/api/` proxy |
 | `ArchiveOS bridge` | 향후 상태/이벤트 관제 연동 | 현재는 구조만 준비 |
 
@@ -143,13 +146,14 @@ curl -I http://127.0.0.1/travel/
 curl -I http://127.0.0.1/learn/
 curl -I http://127.0.0.1/health/
 curl -I http://127.0.0.1/jobs/
+curl -I http://127.0.0.1/sketchfy/
 curl -I http://127.0.0.1/api/health
 ```
 
 Expected behavior:
 
 - `/`는 Atlas Management 포털을 반환합니다.
-- `/travel/`, `/learn/`, `/health/`, `/jobs/`는 각 서비스 앱을 반환합니다.
+- `/travel/`, `/learn/`, `/health/`, `/jobs/`, `/sketchfy/`는 각 서비스 앱을 반환합니다.
 - `/api/health`는 API 헬스 체크 응답을 반환합니다.
 - 루트 포털 배포가 하위 서비스 디렉터리와 API proxy에 영향을 주지 않습니다.
 
