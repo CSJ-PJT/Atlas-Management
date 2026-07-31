@@ -2,6 +2,10 @@
   <img src="docs/brand/atlas-management-lockup.svg" width="900" alt="Atlas Management" />
 </p>
 
+<p align="center">
+  <img src="docs/architecture/atlas-project-architecture.webp" width="900" alt="Atlas 프로젝트 아키텍처" />
+</p>
+
 # Atlas-Management
 
 Atlas-Management는 여러 Atlas 서비스를 하나의 루트 포털에서 확인하고 진입하는 정적 운영 홈입니다.
@@ -66,11 +70,6 @@ Service Routing
 | `Atlas API` | 서버 상태와 서비스 API 제공 | `/api/` proxy |
 | `ArchiveOS bridge` | 향후 상태/이벤트 관제 연동 | 현재는 구조만 준비 |
 
-## Project Architecture
-
-<p align="center">
-  <img src="docs/architecture/atlas-project-architecture.png" width="900" alt="Atlas project architecture" />
-</p>
 
 ## Repository Structure
 
@@ -95,7 +94,7 @@ Atlas-Management/
 | --- | --- |
 | `docs/brand/atlas-management-lockup.svg` | GitHub README 상단 Atlas-Management 브랜드 lockup |
 | `atlas-logo.png` | Gmail `Atlas Logo` 원본 로고 기준 자산 |
-| `docs/architecture/atlas-project-architecture.png` | Atlas 전체 프로젝트 구조 이미지 |
+| `docs/architecture/atlas-project-architecture.webp` | Atlas 전체 프로젝트 구조 이미지 |
 | `atlas-mark.svg` | 웹 헤더와 favicon용 Atlas 마크 |
 | `atlas-mark.png` | Apple touch icon, 북마크 이미지 |
 
