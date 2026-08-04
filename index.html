@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Atlas 운영을 한 곳에서 관리하는 통합 포털입니다. Travel, Incruit, 런, Health, Sketchfy Atlas의 상태와 진입 경로를 제공합니다."
+      content="Atlas Management is the single entry point for Travel, Incruit, Run, Health, and Sketchfy Atlas services."
     />
     <title>Atlas Management</title>
     <link rel="icon" type="image/svg+xml" href="/atlas-mark.svg" />
@@ -23,15 +23,15 @@
       </a>
 
       <nav class="nav-links" aria-label="Portal sections">
-        <a href="/" aria-current="page">홈</a>
-        <a href="#operations">운영 현황</a>
-        <a href="#quick-access">빠른 이동</a>
+        <a href="/" aria-current="page">Home</a>
+        <a href="#operations">Operations</a>
+        <a href="#quick-access">Quick access</a>
       </nav>
 
       <div class="topbar-meta" aria-label="System status">
         <span class="status-dot" aria-hidden="true"></span>
-        <span>실행 상태</span>
-        <time datetime="2026-07-31T00:00:00+09:00">2026.07.31 00:00 KST</time>
+        <span id="portal-status">Checking services</span>
+        <time id="checked-at" datetime="">—</time>
       </div>
     </header>
 
@@ -39,18 +39,18 @@
       <section class="hero" aria-labelledby="page-title">
         <div class="hero-copy">
           <p class="eyebrow">Service Control Desk</p>
-          <h1 id="page-title">Atlas 운영 통합 포털</h1>
+          <h1 id="page-title">Atlas Management Portal</h1>
           <p>
-            각 Atlas 서비스의 현재 상태와 진입 경로를 한 화면에서 확인할 수 있습니다.
-            운영 중인 서비스는 빠르게 점검하고, 문제 상황은 즉시 확인할 수 있습니다.
+            One clear place to enter Atlas services and confirm that each public route is responding.
+            Use the service cards to continue to the product you need.
           </p>
         </div>
 
         <aside class="hero-panel" aria-label="Portal summary">
-          <span class="panel-label">실시간 운영 카운트</span>
+          <span class="panel-label">Registered services</span>
           <strong>5</strong>
-          <p>Travel, Incruit, 런, Health, Sketchfy Atlas의 운영 현황을 함께 표시합니다.</p>
-          <a href="#services">서비스 목록 보기</a>
+          <p>Travel, Incruit, Run, Health, and Sketchfy Atlas are monitored from this portal.</p>
+          <a href="#services">Browse services</a>
         </aside>
       </section>
 
@@ -58,41 +58,41 @@
         <article class="summary-card">
           <span class="summary-icon is-ok" aria-hidden="true"></span>
           <div>
-            <small>전체 상태</small>
-            <strong>정상</strong>
-            <p>모든 핵심 라우트가 정상 응답 중입니다.</p>
+            <small>Public routes</small>
+            <strong id="route-summary">Checking</strong>
+            <p id="route-summary-detail">Verifying the five public Atlas routes.</p>
           </div>
         </article>
         <article class="summary-card">
           <span class="summary-icon" aria-hidden="true"></span>
           <div>
-            <small>운영 서비스</small>
-            <strong>5개</strong>
-            <p>Travel, Learn, Health, Incruit, Sketchfy Atlas가 등록되어 있습니다.</p>
+            <small>Registered services</small>
+            <strong>5</strong>
+            <p>Travel, Incruit, Run, Health, and Sketchfy Atlas.</p>
           </div>
         </article>
         <article class="summary-card">
           <span class="summary-icon is-running" aria-hidden="true"></span>
           <div>
-            <small>현재 제공</small>
-            <strong>5개</strong>
-            <p>Travel, Learn, Health, Incruit, Sketchfy</p>
+            <small>Run Atlas</small>
+            <strong>English UI</strong>
+            <p>Learning content, quizzes, progress, and feedback at a glance.</p>
           </div>
         </article>
         <article class="summary-card">
           <span class="summary-icon is-idle" aria-hidden="true"></span>
           <div>
-            <small>오류 건수</small>
-            <strong>0개</strong>
-            <p>점검 항목에서 현재 오류는 감지되지 않았습니다.</p>
+            <small>Health data</small>
+            <strong>Read-only</strong>
+            <p>Health sync state is shown separately from the dashboard preview.</p>
           </div>
         </article>
         <article class="summary-card">
           <span class="summary-icon is-clock" aria-hidden="true"></span>
           <div>
-            <small>마지막 갱신</small>
-            <strong>수시</strong>
-            <p>매 배포 사이클에서 갱신됩니다.</p>
+            <small>Last route check</small>
+            <strong id="last-check-summary">—</strong>
+            <p>Updated when this portal loads. It does not claim unverified service health.</p>
           </div>
         </article>
       </section>
@@ -102,98 +102,98 @@
           <div class="section-heading">
             <div>
               <p class="eyebrow">Services</p>
-              <h2 id="services-title">운영 서비스 목록</h2>
+              <h2 id="services-title">Atlas service directory</h2>
             </div>
-            <span>카드 클릭 한 번으로 해당 Atlas로 진입할 수 있습니다.</span>
+            <span>Each card opens the corresponding Atlas application.</span>
           </div>
 
           <div class="service-grid">
-            <a class="service-card travel" href="/travel/" aria-label="Travel Atlas로 이동">
+            <a class="service-card travel" href="/travel/" data-service-url="/travel/" aria-label="Open Travel Atlas">
               <span class="service-mark" aria-hidden="true">T</span>
               <div class="service-body">
                 <small>Travel Atlas</small>
                 <h3>Travel Atlas</h3>
-                <p>일정, 좌표, 이동 경로 기반의 여행 운영 서비스를 제공합니다.</p>
-                <ul aria-label="Travel Atlas key metadata">
-                  <li>여행</li>
-                  <li>경로</li>
-                  <li>스케줄</li>
+                <p>Plan trips, add places, set date and time, and review an editable route.</p>
+                <ul aria-label="Travel Atlas features">
+                  <li>Itineraries</li>
+                  <li>Places</li>
+                  <li>Routes</li>
                 </ul>
               </div>
               <div class="service-meta">
-                <span class="badge">운영 연결</span>
+                <span class="badge service-state">Checking</span>
                 <span class="path">/travel/</span>
               </div>
             </a>
 
-            <a class="service-card incruit" href="/jobs/" aria-label="Incruit 채용 공고로 이동">
+            <a class="service-card incruit" href="/jobs/" data-service-url="/jobs/" aria-label="Open Incruit Atlas job listings">
               <span class="service-mark" aria-hidden="true">I</span>
               <div class="service-body">
                 <small>Incruit Atlas</small>
                 <h3>Incruit Atlas</h3>
-                <p>채용 공고 수집, 채용 상태 추적, 알림 연동 기능을 제공합니다.</p>
-                <ul aria-label="Incruit Atlas key metadata">
-                  <li>채용</li>
-                  <li>공고</li>
-                  <li>상태</li>
+                <p>Track job listings, applications, signals, and follow-up actions from one workflow.</p>
+                <ul aria-label="Incruit Atlas features">
+                  <li>Listings</li>
+                  <li>Pipeline</li>
+                  <li>Alerts</li>
                 </ul>
               </div>
               <div class="service-meta">
-                <span class="badge">운영 연결</span>
+                <span class="badge service-state">Checking</span>
                 <span class="path">/jobs/</span>
               </div>
             </a>
 
-            <a class="service-card learn" href="/world/" aria-label="런 Atlas로 이동">
-              <span class="service-mark" aria-hidden="true">L</span>
+            <a class="service-card learn" href="/world/" data-service-url="/world/" aria-label="Open Run Atlas">
+              <span class="service-mark" aria-hidden="true">R</span>
               <div class="service-body">
-                <small>런 Atlas</small>
-                <h3>런 Atlas</h3>
-                <p>학습 콘텐츠, 문항 기반 훈련, 결과 추적을 지원하는 아틀라스입니다.</p>
-                <ul aria-label="런 Atlas key metadata">
-                  <li>학습</li>
-                  <li>퀴즈</li>
-                  <li>피드백</li>
+                <small>Run Atlas</small>
+                <h3>Run Atlas</h3>
+                <p>Build skills through focused lessons, short quizzes, visible progress, and clear feedback.</p>
+                <ul aria-label="Run Atlas features">
+                  <li>Learning paths</li>
+                  <li>Quizzes</li>
+                  <li>Progress</li>
                 </ul>
               </div>
               <div class="service-meta">
-                <span class="badge">운영 연결</span>
+                <span class="badge service-state">Checking</span>
                 <span class="path">/world/</span>
               </div>
             </a>
 
-            <a class="service-card health" href="/health/" aria-label="Health Atlas로 이동">
+            <a class="service-card health" href="/health/" data-service-url="/health/" aria-label="Open Health Atlas">
               <span class="service-mark" aria-hidden="true">H</span>
               <div class="service-body">
                 <small>Health Atlas</small>
                 <h3>Health Atlas</h3>
-                <p>운동·건강 지표와 수면·활동 상태를 통합해 확인할 수 있습니다.</p>
-                <ul aria-label="Health Atlas key metadata">
-                  <li>건강</li>
-                  <li>활동</li>
-                  <li>리포트</li>
+                <p>Review health, activity, sleep, and the current Android-to-web sync state safely.</p>
+                <ul aria-label="Health Atlas features">
+                  <li>Health</li>
+                  <li>Activity</li>
+                  <li>Sync state</li>
                 </ul>
               </div>
               <div class="service-meta">
-                <span class="badge">운영 연결</span>
+                <span class="badge service-state">Checking</span>
                 <span class="path">/health/</span>
               </div>
             </a>
 
-            <a class="service-card sketchfy" href="/sketchfy/" aria-label="Sketchfy Atlas로 이동">
+            <a class="service-card sketchfy" href="/sketchfy/" data-service-url="/sketchfy/" aria-label="Open Sketchfy Atlas">
               <span class="service-mark" aria-hidden="true">S</span>
               <div class="service-body">
                 <small>Sketchfy Atlas</small>
                 <h3>Sketchfy Atlas</h3>
-                <p>그림 그리기 게임과 단어 학습을 결합한 Atlas입니다.</p>
-                <ul aria-label="Sketchfy Atlas key metadata">
-                  <li>게임</li>
-                  <li>학습</li>
-                  <li>앨범</li>
+                <p>Play drawing games, learn Korean, collect progress, and continue your season.</p>
+                <ul aria-label="Sketchfy Atlas features">
+                  <li>Play</li>
+                  <li>Learn</li>
+                  <li>Collect</li>
                 </ul>
               </div>
               <div class="service-meta">
-                <span class="badge">운영 연결</span>
+                <span class="badge service-state">Checking</span>
                 <span class="path">/sketchfy/</span>
               </div>
             </a>
@@ -204,14 +204,14 @@
           <div class="section-heading compact">
             <div>
               <p class="eyebrow">Quick Access</p>
-              <h2 id="quick-title">빠른 진입 경로</h2>
+              <h2 id="quick-title">Direct routes</h2>
             </div>
           </div>
 
           <div class="quick-list" aria-label="Quick service links">
             <a href="/travel/"><span>Travel Atlas</span><em>/travel/</em></a>
-            <a href="/jobs/" aria-label="Incruit 채용 공고 바로 가기"><span>Incruit Atlas</span><em>/jobs/</em></a>
-            <a href="/world/"><span>런 Atlas</span><em>/world/</em></a>
+            <a href="/jobs/" aria-label="Open Incruit Atlas job listings"><span>Incruit Atlas</span><em>/jobs/</em></a>
+            <a href="/world/"><span>Run Atlas</span><em>/world/</em></a>
             <a href="/health/"><span>Health Atlas</span><em>/health/</em></a>
             <a href="/sketchfy/"><span>Sketchfy Atlas</span><em>/sketchfy/</em></a>
           </div>
@@ -221,14 +221,15 @@
               <span class="status-dot" aria-hidden="true"></span>
               <strong>Atlas API</strong>
             </div>
-            <p>API 상태는 운영 체계와 연동되어 실시간으로 점검합니다.</p>
+            <p id="api-status">Checking the API health endpoint.</p>
             <a href="/api/health">/api/health</a>
           </div>
 
-          <div class="planned-card" aria-label="ArchiveOS integration plan">
-            <strong>ArchiveOS 연동 계획</strong>
+          <div class="planned-card" aria-label="Operations note">
+            <strong>Operations note</strong>
             <p>
-              운영 포털의 하드코딩 상태값을 이벤트 기반 상태로 교체해 실서비스 모니터링 정합성을 높일 예정입니다.
+              Route availability is checked in the browser. Product-specific data sync and authentication
+              remain inside each Atlas application.
             </p>
           </div>
         </aside>
@@ -236,20 +237,70 @@
     </main>
 
     <script>
-      const smoothAnchorLinks = document.querySelectorAll('.nav-links a[href^="#"], .quick-list a[href^="#"]');
-      smoothAnchorLinks.forEach((link) => {
+      const serviceCards = [...document.querySelectorAll('[data-service-url]')];
+      const checkedAt = document.querySelector('#checked-at');
+      const lastCheckSummary = document.querySelector('#last-check-summary');
+      const routeSummary = document.querySelector('#route-summary');
+      const routeSummaryDetail = document.querySelector('#route-summary-detail');
+      const portalStatus = document.querySelector('#portal-status');
+      const apiStatus = document.querySelector('#api-status');
+
+      const formatCheckTime = () =>
+        new Intl.DateTimeFormat('en-GB', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          timeZoneName: 'short',
+        }).format(new Date());
+
+      async function checkRoute(card) {
+        const state = card.querySelector('.service-state');
+        try {
+          const response = await fetch(card.dataset.serviceUrl, {
+            method: 'HEAD',
+            cache: 'no-store',
+            redirect: 'follow',
+          });
+          const available = response.ok;
+          state.textContent = available ? 'Available' : `HTTP ${response.status}`;
+          state.classList.toggle('is-unavailable', !available);
+          return available;
+        } catch {
+          state.textContent = 'Unavailable';
+          state.classList.add('is-unavailable');
+          return false;
+        }
+      }
+
+      async function checkPortal() {
+        const results = await Promise.all(serviceCards.map(checkRoute));
+        const available = results.filter(Boolean).length;
+        const checkTime = formatCheckTime();
+        routeSummary.textContent = `${available} / ${serviceCards.length}`;
+        routeSummaryDetail.textContent = `${available} public service routes responded successfully.`;
+        portalStatus.textContent = available === serviceCards.length ? 'All routes available' : 'Route attention required';
+        checkedAt.textContent = checkTime;
+        checkedAt.dateTime = new Date().toISOString();
+        lastCheckSummary.textContent = checkTime;
+
+        try {
+          const response = await fetch('/api/health', { cache: 'no-store' });
+          apiStatus.textContent = response.ok ? 'API health endpoint responded successfully.' : `API health returned HTTP ${response.status}.`;
+        } catch {
+          apiStatus.textContent = 'API health endpoint is unavailable from this browser.';
+        }
+      }
+
+      document.querySelectorAll('.nav-links a[href^="#"]').forEach((link) => {
         link.addEventListener('click', (event) => {
-          const targetSelector = link.getAttribute('href');
-          if (!targetSelector || targetSelector === '#') return;
-          const target = document.querySelector(targetSelector);
+          const target = document.querySelector(link.getAttribute('href'));
           if (!target) return;
           event.preventDefault();
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
       });
+
+      checkPortal();
     </script>
   </body>
 </html>
-
-
-

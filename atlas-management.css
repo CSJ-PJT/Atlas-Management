@@ -464,6 +464,18 @@ h1 {
   font-weight: 800;
 }
 
+.service-state {
+  border-color: rgba(100, 116, 139, 0.24);
+  color: #475569;
+  background: #f8fafc;
+}
+
+.service-state.is-unavailable {
+  border-color: rgba(220, 38, 38, 0.28);
+  color: #b91c1c;
+  background: #fef2f2;
+}
+
 .path {
   color: var(--muted-light);
   font-size: 13px;
