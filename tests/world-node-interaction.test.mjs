@@ -1,101 +1,108 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
-import vm from "node:vm";
+import { bindNodeInteraction } from "../overlays/world-node-native-listener-v1.js";
+import { applyWorldNativeInteractionOverlay } from "../scripts/build-world-native-interaction-overlay.mjs";
 
-const source = readFileSync(
-  new URL("../overlays/world-node-interaction-v1.js", import.meta.url),
-  "utf8",
-);
-const head = readFileSync(
-  new URL("../overlays/world-node-interaction-v1.head.html", import.meta.url),
+const graphSource = readFileSync(
+  new URL("../overlays/world-graph-view-native-v1.js", import.meta.url),
   "utf8",
 );
 
 class FakeElement {
   constructor() {
-    this.isConnected = true;
-    this.selected = false;
-    this.classList = { contains: (name) => name === "is-selected" && this.selected };
+    this.listeners = new Map();
   }
 
-  closest(selector) {
-    return selector === 'svg g.graph-node[role="button"]' ? this : null;
+  addEventListener(type, handler) {
+    const handlers = this.listeners.get(type) ?? [];
+    handlers.push(handler);
+    this.listeners.set(type, handlers);
+  }
+
+  removeEventListener(type, handler) {
+    this.listeners.set(
+      type,
+      (this.listeners.get(type) ?? []).filter((candidate) => candidate !== handler),
+    );
+  }
+
+  dispatch(type, event = {}) {
+    for (const handler of this.listeners.get(type) ?? []) handler(event);
   }
 }
 
-function loadBridge({ selected = false, detailOpen = false } = {}) {
-  const listeners = new Map();
-  const node = new FakeElement();
-  node.selected = selected;
-  let open = detailOpen;
-  let clickCount = 0;
-  let keydownCount = 0;
+test("native node listeners activate once and clean up", () => {
+  const element = new FakeElement();
+  let activations = 0;
   let prevented = false;
-
-  node["__reactProps$test"] = {
-    onClick: () => {
-      clickCount += 1;
-      node.selected = true;
-      open = true;
-    },
-    onKeyDown: () => {
-      keydownCount += 1;
-      node.selected = true;
-      open = true;
-    },
-  };
-
-  const document = {
-    addEventListener: (type, handler, capture) => listeners.set(type, { handler, capture }),
-    querySelector: () => (open ? {} : null),
-  };
-  const context = vm.createContext({
-    document,
-    Element: FakeElement,
-    window: { setTimeout: (handler) => handler() },
+  const cleanup = bindNodeInteraction(element, () => {
+    activations += 1;
   });
-  vm.runInContext(source, context);
 
-  return {
-    listeners,
-    node,
-    click: () => listeners.get("click").handler({ target: node }),
-    keydown: (key) =>
-      listeners.get("keydown").handler({
-        target: node,
-        key,
-        preventDefault: () => {
-          prevented = true;
-        },
-      }),
-    counts: () => ({ clickCount, keydownCount, prevented }),
-  };
-}
+  element.dispatch("click");
+  element.dispatch("keydown", { key: "Enter", preventDefault: () => (prevented = true) });
+  element.dispatch("keydown", { key: " ", preventDefault: () => (prevented = true) });
+  element.dispatch("keydown", { key: "Escape", preventDefault: () => (prevented = true) });
+  assert.equal(activations, 3);
+  assert.equal(prevented, true);
 
-test("the overlay has a stable public script reference", () => {
-  assert.equal(head.trim(), '<script defer src="/world/world-node-interaction-v1.js"></script>');
+  cleanup();
+  element.dispatch("click");
+  assert.equal(activations, 3);
+  assert.equal(element.listeners.get("click").length, 0);
+  assert.equal(element.listeners.get("keydown").length, 0);
 });
 
-test("capture listeners recover a missing React click dispatch", () => {
-  const bridge = loadBridge();
-  assert.equal(bridge.listeners.get("click").capture, true);
-  bridge.click();
-  assert.deepEqual(bridge.counts(), { clickCount: 1, keydownCount: 0, prevented: false });
+test("GraphView binds and cleans native listeners without synthetic click handlers", () => {
+  assert.match(graphSource, /React\.useEffect/);
+  assert.match(graphSource, /return bindNodeInteraction\(element, \(\) => onSelect\(node\)\)/);
+  assert.doesNotMatch(graphSource, /onClick\s*:/);
+  assert.doesNotMatch(graphSource, /onKeyDown\s*:/);
 });
 
-test("the bridge does not duplicate a successful React click", () => {
-  const bridge = loadBridge({ selected: true, detailOpen: true });
-  bridge.click();
-  assert.deepEqual(bridge.counts(), { clickCount: 0, keydownCount: 0, prevented: false });
-});
+test("the artifact overlay creates versioned entry and GraphView assets", () => {
+  const root = mkdtempSync(join(tmpdir(), "world-native-overlay-"));
+  const assets = join(root, "assets");
+  mkdirSync(assets);
+  writeFileSync(
+    join(root, "index.html"),
+    '<script type="module" src="/world/assets/index-OLD.js"></script>',
+  );
+  writeFileSync(join(assets, "index-OLD.js"), 'import("./GraphView-OLD.js")');
+  writeFileSync(join(assets, "GraphView-OLD.js"), "export const legacy = true;");
 
-test("Enter and Space recover the keyboard handler", () => {
-  const enter = loadBridge();
-  enter.keydown("Enter");
-  assert.deepEqual(enter.counts(), { clickCount: 0, keydownCount: 1, prevented: false });
-
-  const space = loadBridge();
-  space.keydown(" ");
-  assert.deepEqual(space.counts(), { clickCount: 0, keydownCount: 1, prevented: true });
+  try {
+    assert.throws(
+      () => applyWorldNativeInteractionOverlay(root),
+      /operating twin SHA256 mismatch/,
+    );
+    const hash = (value) => createHash("sha256").update(value).digest("hex");
+    const result = applyWorldNativeInteractionOverlay(root, {
+      entrySha256: hash('import("./GraphView-OLD.js")'),
+      graphSha256: hash("export const legacy = true;"),
+    });
+    assert.equal(result.currentEntry, "index-OLD.js");
+    assert.equal(result.currentGraph, "GraphView-OLD.js");
+    assert.match(readFileSync(join(root, "index.html"), "utf8"), /index-world-node-native-v1\.js/);
+    assert.match(
+      readFileSync(join(assets, "index-world-node-native-v1.js"), "utf8"),
+      /world-graph-view-native-v1\.js/,
+    );
+    assert.match(
+      readFileSync(join(assets, "world-graph-view-native-v1.js"), "utf8"),
+      /bindNodeInteraction/,
+    );
+    assert.match(
+      readFileSync(join(assets, "world-node-native-listener-v1.js"), "utf8"),
+      /removeEventListener/,
+    );
+    assert.equal(existsSync(join(assets, "index-OLD.js")), false);
+    assert.equal(existsSync(join(assets, "GraphView-OLD.js")), false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
