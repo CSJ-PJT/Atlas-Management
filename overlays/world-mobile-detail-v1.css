@@ -1,0 +1,12 @@
+/* Versioned compatibility overlay for the legacy read-only /world/ artifact. */
+@media (max-width: 700px) {
+  .workspace.has-details {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .workspace.has-details > *,
+  .map-card,
+  .detail-panel {
+    min-width: 0;
+  }
+}
