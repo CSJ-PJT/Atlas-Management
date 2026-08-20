@@ -29,7 +29,7 @@
       </nav>
 
       <div class="topbar-meta" aria-label="시스템 상태">
-        <span class="status-dot" aria-hidden="true"></span>
+        <span class="status-dot" id="portal-status-dot" aria-hidden="true"></span>
         <span id="portal-status">서비스 확인 중</span>
         <time id="checked-at" datetime="">—</time>
       </div>
@@ -41,7 +41,7 @@
           <p class="eyebrow">서비스 운영 현황</p>
           <h1 id="page-title">아틀라스 관리 포털</h1>
           <p>
-            아틀라스 서비스를 한곳에서 확인하고, 각 공개 경로의 응답 상태를 바로 점검할 수 있습니다.
+            아틀라스 서비스를 한곳에서 확인하고, 각 서비스의 핵심 기능 상태를 바로 점검할 수 있습니다.
             필요한 서비스 카드를 선택해 계속 진행하세요.
           </p>
         </div>
@@ -56,11 +56,11 @@
 
       <section class="summary-grid" id="operations" aria-label="아틀라스 운영 요약">
         <article class="summary-card">
-          <span class="summary-icon is-ok" aria-hidden="true"></span>
+          <span class="summary-icon" id="route-summary-icon" aria-hidden="true"></span>
           <div>
-            <small>공개 경로</small>
+            <small>기능 상태</small>
             <strong id="route-summary">확인 중</strong>
-            <p id="route-summary-detail">아틀라스 공개 경로 5개를 확인하고 있습니다.</p>
+            <p id="route-summary-detail">아틀라스 서비스 기능 probe 5개를 확인하고 있습니다.</p>
           </div>
         </article>
         <article class="summary-card">
@@ -108,7 +108,7 @@
           </div>
 
           <div class="service-grid">
-            <a class="service-card travel" href="/travel/" data-service-url="/travel/" aria-label="Travel Atlas 열기">
+            <a class="service-card travel" href="/travel/" data-service-id="travel" aria-label="Travel Atlas 열기">
               <span class="service-mark" aria-hidden="true">T</span>
               <div class="service-body">
                 <small>Travel Atlas</small>
@@ -126,7 +126,7 @@
               </div>
             </a>
 
-            <a class="service-card incruit" href="/jobs/" data-service-url="/jobs/" aria-label="Incruit Atlas 채용 공고 열기">
+            <a class="service-card incruit" href="/jobs/" data-service-id="incruit" aria-label="Incruit Atlas 채용 공고 열기">
               <span class="service-mark" aria-hidden="true">I</span>
               <div class="service-body">
                 <small>Incruit Atlas</small>
@@ -144,7 +144,7 @@
               </div>
             </a>
 
-            <a class="service-card learn" href="/learn/" data-service-url="/learn/" aria-label="Learn Atlas 열기">
+            <a class="service-card learn" href="/learn/" data-service-id="learn" aria-label="Learn Atlas 열기">
               <span class="service-mark" aria-hidden="true">R</span>
               <div class="service-body">
                 <small>Learn Atlas</small>
@@ -162,7 +162,7 @@
               </div>
             </a>
 
-            <a class="service-card health" href="/health/" data-service-url="/health/" aria-label="Health Atlas 열기">
+            <a class="service-card health" href="/health/" data-service-id="health" aria-label="Health Atlas 열기">
               <span class="service-mark" aria-hidden="true">H</span>
               <div class="service-body">
                 <small>Health Atlas</small>
@@ -180,7 +180,7 @@
               </div>
             </a>
 
-            <a class="service-card sketchfy" href="/sketchfy/" data-service-url="/sketchfy/" aria-label="Sketchfy Atlas 열기">
+            <a class="service-card sketchfy" href="/sketchfy/" data-service-id="sketchfy" aria-label="Sketchfy Atlas 열기">
               <span class="service-mark" aria-hidden="true">S</span>
               <div class="service-body">
                 <small>Sketchfy Atlas</small>
@@ -218,7 +218,7 @@
 
           <div class="api-card" aria-label="Atlas API 상태">
             <div>
-              <span class="status-dot" aria-hidden="true"></span>
+              <span class="status-dot" id="api-status-dot" aria-hidden="true"></span>
               <strong>Atlas API</strong>
             </div>
             <p id="api-status">API 상태를 확인하고 있습니다.</p>
@@ -228,79 +228,14 @@
           <div class="planned-card" aria-label="운영 안내">
             <strong>운영 안내</strong>
             <p>
-              경로 응답 상태는 브라우저에서 확인합니다. 서비스별 데이터 동기화와 인증은
-              각 아틀라스 애플리케이션에서 별도로 처리합니다.
+              각 카드는 대표 데이터, 백엔드 상태 또는 공개 자산 계약을 확인합니다. Incruit 데이터가
+              24시간 넘게 갱신되지 않으면 정상 대신 데이터 오래됨으로 표시합니다.
             </p>
           </div>
         </aside>
       </section>
     </main>
 
-    <script>
-      const serviceCards = [...document.querySelectorAll('[data-service-url]')];
-      const checkedAt = document.querySelector('#checked-at');
-      const lastCheckSummary = document.querySelector('#last-check-summary');
-      const routeSummary = document.querySelector('#route-summary');
-      const routeSummaryDetail = document.querySelector('#route-summary-detail');
-      const portalStatus = document.querySelector('#portal-status');
-      const apiStatus = document.querySelector('#api-status');
-
-      const formatCheckTime = () =>
-        new Intl.DateTimeFormat('ko-KR', {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          timeZoneName: 'short',
-        }).format(new Date());
-
-      async function checkRoute(card) {
-        const state = card.querySelector('.service-state');
-        try {
-          const response = await fetch(card.dataset.serviceUrl, {
-            method: 'HEAD',
-            cache: 'no-store',
-            redirect: 'follow',
-          });
-          const available = response.ok;
-          state.textContent = available ? '사용 가능' : `HTTP ${response.status}`;
-          state.classList.toggle('is-unavailable', !available);
-          return available;
-        } catch {
-          state.textContent = '연결 불가';
-          state.classList.add('is-unavailable');
-          return false;
-        }
-      }
-
-      async function checkPortal() {
-        const results = await Promise.all(serviceCards.map(checkRoute));
-        const available = results.filter(Boolean).length;
-        const checkTime = formatCheckTime();
-        routeSummary.textContent = `${available} / ${serviceCards.length}`;
-        routeSummaryDetail.textContent = `공개 서비스 경로 ${available}개가 정상적으로 응답했습니다.`;
-        portalStatus.textContent = available === serviceCards.length ? '모든 경로 사용 가능' : '경로 확인 필요';
-        checkedAt.textContent = checkTime;
-        checkedAt.dateTime = new Date().toISOString();
-        lastCheckSummary.textContent = checkTime;
-
-        try {
-          const response = await fetch('/api/health', { cache: 'no-store' });
-          apiStatus.textContent = response.ok ? 'API 상태 확인이 정상적으로 완료됐습니다.' : `API 상태 확인 결과: HTTP ${response.status}`;
-        } catch {
-          apiStatus.textContent = '이 브라우저에서 API 상태를 확인할 수 없습니다.';
-        }
-      }
-
-      document.querySelectorAll('.nav-links a[href^="#"]').forEach((link) => {
-        link.addEventListener('click', (event) => {
-          const target = document.querySelector(link.getAttribute('href'));
-          if (!target) return;
-          event.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-      });
-
-      checkPortal();
-    </script>
+    <script type="module" src="/atlas-management.js"></script>
   </body>
 </html>

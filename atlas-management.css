@@ -147,8 +147,23 @@ a {
   width: 9px;
   height: 9px;
   border-radius: 999px;
+  background: #64748b;
+  box-shadow: 0 0 0 4px rgba(100, 116, 139, 0.12);
+}
+
+.status-dot.is-ok {
   background: var(--ok);
   box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.12);
+}
+
+.status-dot.is-warning {
+  background: #d97706;
+  box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.14);
+}
+
+.status-dot.is-error {
+  background: #dc2626;
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.14);
 }
 
 .shell {
@@ -284,6 +299,14 @@ h1 {
 
 .summary-icon.is-idle {
   background: #94a3b8;
+}
+
+.summary-icon.is-warning {
+  background: #d97706;
+}
+
+.summary-icon.is-error {
+  background: #dc2626;
 }
 
 .summary-icon.is-clock {
@@ -474,6 +497,12 @@ h1 {
   border-color: rgba(220, 38, 38, 0.28);
   color: #b91c1c;
   background: #fef2f2;
+}
+
+.service-state.is-stale {
+  border-color: rgba(217, 119, 6, 0.32);
+  color: #92400e;
+  background: #fffbeb;
 }
 
 .path {
