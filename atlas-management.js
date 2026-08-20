@@ -39,10 +39,33 @@ export function classifyTravelApi(data) {
     : error('여행 지도 또는 장소 검색 API 설정을 확인해야 합니다.');
 }
 
+export function findLearnEntry(body) {
+  const src = body.match(/<script\b[^>]*\bsrc=["']([^"']*\/?app\.js(?:\?[^"']*)?)["'][^>]*>/i)?.[1];
+  if (/^(?:\.\/)?app\.js(?:\?[^#]*)?$/.test(src || '')) {
+    return `/learn/${src.replace(/^\.\//, '')}`;
+  }
+  return /^\/learn\/app\.js(?:\?[^#]*)?$/.test(src || '') ? src : null;
+}
+
+export function classifyLearnIndex({ ok, contentType, body }) {
+  const hasAppShell = /<div\b[^>]*\bclass=["'][^"']*\bapp-shell\b[^"']*["']/i.test(body);
+  const hasKnowledgeView = /<section\b[^>]*\bid=["']knowledgeView["']/i.test(body);
+  return ok &&
+    contentType.toLowerCase().includes('text/html') &&
+    hasAppShell &&
+    hasKnowledgeView &&
+    findLearnEntry(body)
+    ? healthy('학습 애플리케이션 진입점 확인')
+    : error('학습 애플리케이션 진입점을 확인해야 합니다.');
+}
+
 export function classifyLearnAsset({ ok, contentType, body }) {
-  return ok && contentType.toLowerCase().includes('image/svg+xml') && /<svg\b/i.test(body)
-    ? healthy('학습 애플리케이션 대표 자산 사용 가능')
-    : error('학습 애플리케이션 대표 자산을 확인해야 합니다.');
+  const isJavaScript = contentType.toLowerCase().includes('javascript');
+  const hasQuestionBank = /window\.QUESTION_BANK/.test(body);
+  const hasServiceWorkerRegistration = /serviceWorker\.register/.test(body);
+  return ok && isJavaScript && hasQuestionBank && hasServiceWorkerRegistration
+    ? healthy('학습 애플리케이션 대표 스크립트 사용 가능')
+    : error('학습 애플리케이션 대표 스크립트를 확인해야 합니다.');
 }
 
 export function classifySketchfyIndex({ ok, contentType, body }) {
@@ -94,7 +117,16 @@ export async function runServiceProbe(serviceId, fetchImpl = fetch) {
       case 'travel':
         return await probeJson('/api/health', classifyTravelApi, fetchImpl);
       case 'learn': {
-        const response = await fetchWithTimeout('/learn/assets/atlas-mark.svg', fetchImpl);
+        const indexResponse = await fetchWithTimeout(`/learn/?portal-probe=${Date.now()}`, fetchImpl);
+        const indexBody = await indexResponse.text();
+        const indexResult = classifyLearnIndex({
+          ok: indexResponse.ok,
+          contentType: indexResponse.headers.get('content-type') || '',
+          body: indexBody,
+        });
+        if (indexResult.kind !== 'healthy') return indexResult;
+
+        const response = await fetchWithTimeout(findLearnEntry(indexBody), fetchImpl);
         return classifyLearnAsset({
           ok: response.ok,
           contentType: response.headers.get('content-type') || '',

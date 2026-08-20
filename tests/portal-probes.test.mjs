@@ -6,8 +6,11 @@ import {
   classifyHealthStatus,
   classifyIncruitJobs,
   classifyLearnAsset,
+  classifyLearnIndex,
   classifySketchfyIndex,
   classifyTravelApi,
+  findLearnEntry,
+  runServiceProbe,
 } from '../atlas-management.js';
 
 test('Health는 operational 및 backendAvailable을 모두 요구한다', () => {
@@ -44,11 +47,58 @@ test('Travel API는 지도와 검색 설정까지 모두 확인한다', () => {
   );
 });
 
-test('Learn 대표 SVG와 Sketchfy public index 계약을 검증한다', () => {
+test('Learn public index에서 실제 대표 스크립트를 찾고 현재 계약을 검증한다', () => {
+  const learnIndex = `
+    <div class="app-shell"></div>
+    <section id="knowledgeView"></section>
+    <script src="app.js?v=backend-atlas-v8"></script>
+  `;
+  assert.equal(findLearnEntry(learnIndex), '/learn/app.js?v=backend-atlas-v8');
   assert.equal(
-    classifyLearnAsset({ ok: true, contentType: 'image/svg+xml', body: '<svg></svg>' }).kind,
+    classifyLearnIndex({ ok: true, contentType: 'text/html; charset=utf-8', body: learnIndex }).kind,
     'healthy',
   );
+  assert.equal(
+    classifyLearnAsset({
+      ok: true,
+      contentType: 'application/javascript',
+      body: 'const bank = window.QUESTION_BANK; navigator.serviceWorker.register("./sw.js");',
+    }).kind,
+    'healthy',
+  );
+  assert.equal(
+    classifyLearnIndex({ ok: true, contentType: 'text/html', body: '<div class="app-shell"></div>' }).kind,
+    'error',
+  );
+});
+
+test('Learn probe는 폐기된 SVG 대신 index가 가리키는 스크립트를 조회한다', async () => {
+  const requests = [];
+  const fetchImpl = async (url) => {
+    requests.push(url);
+    if (url.startsWith('/learn/?portal-probe=')) {
+      return new Response(`
+        <div class="app-shell"></div>
+        <section id="knowledgeView"></section>
+        <script src="app.js?v=backend-atlas-v8"></script>
+      `, { headers: { 'content-type': 'text/html; charset=utf-8' } });
+    }
+    if (url === '/learn/app.js?v=backend-atlas-v8') {
+      return new Response(
+        'const bank = window.QUESTION_BANK; navigator.serviceWorker.register("./sw.js");',
+        { headers: { 'content-type': 'application/javascript' } },
+      );
+    }
+    throw new Error(`unexpected probe URL: ${url}`);
+  };
+
+  assert.equal((await runServiceProbe('learn', fetchImpl)).kind, 'healthy');
+  assert.equal(requests.length, 2);
+  assert.equal(requests[1], '/learn/app.js?v=backend-atlas-v8');
+  assert.ok(requests.every((url) => !url.includes('atlas-mark.svg')));
+});
+
+test('Sketchfy public index 계약을 검증한다', () => {
   assert.equal(
     classifySketchfyIndex({
       ok: true,
