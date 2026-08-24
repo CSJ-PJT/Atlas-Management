@@ -121,3 +121,14 @@ test('index는 다섯 서비스별 probe id와 외부 module을 연결한다', a
   assert.match(html, /<script\s+type=["']module["']\s+src=["']\/atlas-management\.js["']/);
   assert.doesNotMatch(html, /method:\s*["']HEAD["']/);
 });
+
+test('Sketchfy Atlas는 서비스 카드와 바로가기에서 두 번째다', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const cardOrder = [...html.matchAll(/class=["']service-card\s+[^"']+["'][^>]+data-service-id=["']([^"']+)["']/g)]
+    .map((match) => match[1]);
+  const quickList = html.match(/<div class=["']quick-list["'][^>]*>([\s\S]*?)<\/div>/)?.[1] ?? '';
+  const quickOrder = [...quickList.matchAll(/href=["']\/([^/]+)\/["']/g)].map((match) => match[1]);
+
+  assert.deepEqual(cardOrder, ['travel', 'sketchfy', 'incruit', 'learn', 'health']);
+  assert.deepEqual(quickOrder, ['travel', 'sketchfy', 'jobs', 'learn', 'health']);
+});
