@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <meta name="referrer" content="no-referrer" />
+    <title>Atlas Access Console</title>
+    <link rel="icon" type="image/svg+xml" href="/atlas-mark.svg" />
+    <link rel="stylesheet" href="/admin/admin.css" />
+  </head>
+  <body>
+    <header class="admin-topbar">
+      <a class="brand" href="/" aria-label="Atlas Management 홈으로 이동">
+        <img src="/atlas-mark.svg" alt="" />
+        <span><strong>ATLAS</strong><small>Access Console</small></span>
+      </a>
+      <div class="topbar-actions">
+        <span class="secure-badge">관리자 전용</span>
+        <a class="home-link" href="/">포털로 돌아가기</a>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <section id="login-view" class="login-layout" aria-labelledby="login-title">
+        <div class="login-copy">
+          <p class="eyebrow">Operations Access</p>
+          <h1 id="login-title">Atlas 접속 현황</h1>
+          <p>
+            Atlas 루트와 각 서비스의 접속 시간, IP, 경로를 확인하는 운영 화면입니다.
+            비밀번호는 브라우저나 저장소에 저장하지 않습니다.
+          </p>
+        </div>
+
+        <form id="login-form" class="login-card" autocomplete="off">
+          <label for="admin-password">관리자 비밀번호</label>
+          <input
+            id="admin-password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+            minlength="1"
+            autofocus
+          />
+          <button type="submit">로그인</button>
+          <p id="login-message" class="form-message" role="status" aria-live="polite"></p>
+          <small>인증 세션은 HttpOnly 쿠키로 유지되며 기본 8시간 후 만료됩니다.</small>
+        </form>
+      </section>
+
+      <section id="dashboard-view" class="dashboard" hidden aria-labelledby="dashboard-title">
+        <div class="dashboard-heading">
+          <div>
+            <p class="eyebrow">Access Overview</p>
+            <h1 id="dashboard-title">접속 로그 관제</h1>
+            <p>페이지 진입 요청만 집계하며 CSS·JS·이미지 같은 정적 자산 요청은 제외합니다.</p>
+          </div>
+          <div class="dashboard-actions">
+            <button id="refresh-button" type="button" class="secondary">새로고침</button>
+            <button id="logout-button" type="button" class="danger-ghost">로그아웃</button>
+          </div>
+        </div>
+
+        <section class="summary-grid" aria-label="24시간 접속 요약">
+          <article class="summary-card">
+            <small>페이지 접속</small>
+            <strong id="summary-visits">-</strong>
+            <span>최근 선택 기간</span>
+          </article>
+          <article class="summary-card">
+            <small>고유 방문자</small>
+            <strong id="summary-ips">-</strong>
+            <span>고유 IP 기준</span>
+          </article>
+          <article class="summary-card">
+            <small>재방문 IP</small>
+            <strong id="summary-repeat">-</strong>
+            <span>2회 이상 페이지 접속</span>
+          </article>
+          <article class="summary-card">
+            <small>최근 접속</small>
+            <strong id="summary-latest" class="summary-time">-</strong>
+            <span>Asia/Seoul</span>
+          </article>
+        </section>
+
+        <section class="monitor-grid">
+          <aside class="service-panel" aria-labelledby="service-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">By Service</p>
+                <h2 id="service-title">서비스별 접속</h2>
+              </div>
+            </div>
+            <div id="service-counts" class="service-counts"></div>
+            <p class="privacy-note">
+              IP는 운영 진단 목적으로 관리자에게만 표시합니다. 기본 로그 보존 기간은 배포 설정에서 14일로 권장합니다.
+            </p>
+          </aside>
+
+          <section class="logs-panel" aria-labelledby="logs-title">
+            <div class="panel-heading logs-heading">
+              <div>
+                <p class="eyebrow">Visit Log</p>
+                <h2 id="logs-title">최근 접속 기록</h2>
+              </div>
+              <span id="result-count">0건</span>
+            </div>
+
+            <form id="filter-form" class="filters">
+              <label>
+                <span>기간</span>
+                <select id="hours-filter" name="hours">
+                  <option value="24">최근 24시간</option>
+                  <option value="72">최근 3일</option>
+                  <option value="168">최근 7일</option>
+                  <option value="336">최근 14일</option>
+                  <option value="all">현재 로그 전체</option>
+                </select>
+              </label>
+              <label>
+                <span>서비스</span>
+                <select id="service-filter" name="service">
+                  <option value="">전체</option>
+                  <option value="root">Atlas Management</option>
+                  <option value="travel">Travel Atlas</option>
+                  <option value="jobs">Incruit Atlas</option>
+                  <option value="world">Run Atlas</option>
+                  <option value="learn">Learn Atlas</option>
+                  <option value="health">Health Atlas</option>
+                  <option value="sketchfy">Sketchfy Atlas</option>
+                  <option value="archive">Archive</option>
+                </select>
+              </label>
+              <label class="ip-filter">
+                <span>IP 검색</span>
+                <input id="ip-filter" name="ip" type="search" inputmode="text" placeholder="예: 203.0.113" />
+              </label>
+              <label>
+                <span>표시 건수</span>
+                <select id="limit-filter" name="limit">
+                  <option value="100">100</option>
+                  <option value="200" selected>200</option>
+                  <option value="500">500</option>
+                </select>
+              </label>
+              <button type="submit">조회</button>
+            </form>
+
+            <p id="dashboard-message" class="form-message" role="status" aria-live="polite"></p>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">시간</th>
+                    <th scope="col">IP</th>
+                    <th scope="col">서비스</th>
+                    <th scope="col">경로</th>
+                    <th scope="col">응답</th>
+                    <th scope="col">브라우저 / 기기</th>
+                  </tr>
+                </thead>
+                <tbody id="visits-body"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script src="/admin/admin.js" defer></script>
+  </body>
+</html>
