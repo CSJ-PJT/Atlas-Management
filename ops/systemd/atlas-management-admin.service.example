@@ -1,0 +1,21 @@
+[Unit]
+Description=Atlas Management access-log admin API
+After=network.target nginx.service
+Wants=nginx.service
+
+[Service]
+Type=simple
+User=nginx
+Group=nginx
+EnvironmentFile=/etc/atlas-management/admin.env
+ExecStart=/usr/bin/python3 /opt/atlas-management/ops/atlas_admin_server.py
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadOnlyPaths=/var/log/nginx
+
+[Install]
+WantedBy=multi-user.target

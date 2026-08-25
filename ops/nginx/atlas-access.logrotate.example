@@ -1,0 +1,13 @@
+/var/log/nginx/atlas-access.jsonl {
+    daily
+    rotate 14
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 nginx nginx
+    sharedscripts
+    postrotate
+        /bin/kill -USR1 $(cat /run/nginx.pid 2>/dev/null) 2>/dev/null || true
+    endscript
+}

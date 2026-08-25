@@ -1,0 +1,28 @@
+.admin-login-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 11px;
+  margin-right: 4px;
+  border: 1px solid #c8d4e1;
+  border-radius: 8px;
+  color: #111827;
+  background: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.admin-login-link:hover,
+.admin-login-link:focus-visible {
+  border-color: #94a3b8;
+  background: #f8fafc;
+  outline: none;
+}
+
+@media (max-width: 860px) {
+  .admin-login-link {
+    margin-right: auto;
+  }
+}
