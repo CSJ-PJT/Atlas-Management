@@ -1,0 +1,12 @@
+# Local secrets / runtime configuration
+.env
+.env.*
+*.env
+
+# Python runtime artifacts
+__pycache__/
+*.py[cod]
+
+# Local access-log samples
+*.jsonl
+*.log
