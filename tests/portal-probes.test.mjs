@@ -118,7 +118,7 @@ test('index는 다섯 서비스별 probe id와 외부 module을 연결한다', a
   for (const id of ['travel', 'incruit', 'learn', 'health', 'sketchfy']) {
     assert.match(html, new RegExp(`data-service-id=["']${id}["']`));
   }
-  assert.match(html, /<script\s+type=["']module["']\s+src=["']\/atlas-management\.js["']/);
+  assert.match(html, /<script\s+type=["']module["']\s+src=["']\/atlas-management\.js(?:\?[^"']+)?["']/);
   assert.doesNotMatch(html, /method:\s*["']HEAD["']/);
 });
 
@@ -131,4 +131,17 @@ test('Sketchfy Atlas는 서비스 카드와 바로가기에서 두 번째다', a
 
   assert.deepEqual(cardOrder, ['travel', 'sketchfy', 'incruit', 'learn', 'health']);
   assert.deepEqual(quickOrder, ['travel', 'sketchfy', 'jobs', 'learn', 'health']);
+});
+
+test('관리자 로그인과 이용 기록 UI는 외부 module 및 보호 API에 연결된다', async () => {
+  const [html, script] = await Promise.all([
+    readFile(new URL('../index.html', import.meta.url), 'utf8'),
+    readFile(new URL('../atlas-management.js', import.meta.url), 'utf8'),
+  ]);
+  assert.match(html, /id=["']admin-login-button["']/);
+  assert.match(html, /<dialog[^>]+id=["']admin-dialog["']/);
+  assert.match(html, /id=["']admin-usage-rows["']/);
+  assert.match(script, /\/atlas-admin-api/);
+  assert.match(script, /credentials:\s*["']same-origin["']/);
+  assert.doesNotMatch(script, /password\s*[:=]\s*["'][^"']+["']/i);
 });

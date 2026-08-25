@@ -10,7 +10,7 @@
     <title>Atlas Management | 아틀라스 관리 포털</title>
     <link rel="icon" type="image/svg+xml" href="/atlas-mark.svg" />
     <link rel="apple-touch-icon" href="/atlas-mark.png" />
-    <link rel="stylesheet" href="/atlas-management.css" />
+    <link rel="stylesheet" href="/atlas-management.css?v=atlas-admin-v1" />
   </head>
   <body>
     <header class="topbar" aria-label="아틀라스 관리 포털 탐색">
@@ -32,8 +32,80 @@
         <span class="status-dot" id="portal-status-dot" aria-hidden="true"></span>
         <span id="portal-status">서비스 확인 중</span>
         <time id="checked-at" datetime="">—</time>
+        <button class="admin-login-button" id="admin-login-button" type="button">관리자</button>
       </div>
     </header>
+
+    <dialog class="admin-dialog" id="admin-dialog" aria-labelledby="admin-dialog-title">
+      <div class="admin-dialog-head">
+        <div>
+          <p class="eyebrow">관리자 전용</p>
+          <h2 id="admin-dialog-title">서비스 이용 기록</h2>
+        </div>
+        <button class="admin-close-button" id="admin-close-button" type="button" aria-label="관리자 창 닫기">×</button>
+      </div>
+
+      <form class="admin-login-form" id="admin-login-form">
+        <p>관리자 인증 후 전체 서비스의 접근 IP와 시간을 조회할 수 있습니다.</p>
+        <label>
+          관리자 ID
+          <input id="admin-username" name="username" autocomplete="username" required />
+        </label>
+        <label>
+          비밀번호
+          <input id="admin-password" name="password" type="password" autocomplete="current-password" required />
+        </label>
+        <p class="admin-message" id="admin-login-message" role="alert" aria-live="polite"></p>
+        <button class="admin-primary-button" type="submit">로그인</button>
+      </form>
+
+      <section class="admin-usage" id="admin-usage" hidden aria-label="서비스 이용 기록 조회">
+        <div class="admin-toolbar">
+          <label>서비스
+            <select id="admin-service-filter">
+              <option value="all">전체 서비스</option>
+              <option value="portal">Atlas Management</option>
+              <option value="travel">Travel Atlas</option>
+              <option value="incruit">Incruit Atlas</option>
+              <option value="learn">Learn Atlas</option>
+              <option value="health">Health Atlas</option>
+              <option value="sketchfy">Sketchfy Atlas</option>
+              <option value="world">Archive World</option>
+              <option value="archive">Archive</option>
+              <option value="archiveos">ArchiveOS</option>
+            </select>
+          </label>
+          <label>기간
+            <select id="admin-days-filter">
+              <option value="1">최근 24시간</option>
+              <option value="7" selected>최근 7일</option>
+              <option value="30">최근 30일</option>
+            </select>
+          </label>
+          <button class="admin-secondary-button" id="admin-refresh-button" type="button">새로고침</button>
+          <button class="admin-secondary-button" id="admin-logout-button" type="button">로그아웃</button>
+        </div>
+
+        <div class="admin-summary" aria-label="이용 기록 요약">
+          <article><small>접근 기록</small><strong id="admin-total-count">0</strong></article>
+          <article><small>고유 IP</small><strong id="admin-unique-ip-count">0</strong></article>
+          <article><small>조회 기간</small><strong id="admin-period-label">7일</strong></article>
+        </div>
+
+        <p class="admin-message" id="admin-usage-message" role="status" aria-live="polite"></p>
+        <div class="admin-table-wrap">
+          <table>
+            <thead><tr><th>시간</th><th>IP</th><th>서비스</th><th>기능 경로</th><th>상태</th></tr></thead>
+            <tbody id="admin-usage-rows"></tbody>
+          </table>
+        </div>
+        <div class="admin-pagination">
+          <button class="admin-secondary-button" id="admin-prev-button" type="button">이전</button>
+          <span id="admin-page-label">1 / 1</span>
+          <button class="admin-secondary-button" id="admin-next-button" type="button">다음</button>
+        </div>
+      </section>
+    </dialog>
 
     <main class="shell">
       <section class="hero" aria-labelledby="page-title">
@@ -237,6 +309,6 @@
       </section>
     </main>
 
-    <script type="module" src="/atlas-management.js"></script>
+    <script type="module" src="/atlas-management.js?v=atlas-admin-v1"></script>
   </body>
 </html>

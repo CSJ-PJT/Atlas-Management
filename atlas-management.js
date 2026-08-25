@@ -224,7 +224,173 @@ function wireNavigation() {
   });
 }
 
+const ADMIN_API_BASE = '/atlas-admin-api';
+const ADMIN_SERVICE_LABELS = {
+  portal: 'Atlas Management',
+  travel: 'Travel Atlas',
+  incruit: 'Incruit Atlas',
+  learn: 'Learn Atlas',
+  health: 'Health Atlas',
+  sketchfy: 'Sketchfy Atlas',
+  world: 'Archive World',
+  archive: 'Archive',
+  archiveos: 'ArchiveOS',
+  other: '기타',
+};
+
+export function formatAdminService(service) {
+  return ADMIN_SERVICE_LABELS[service] || service || '기타';
+}
+
+async function adminRequest(path, options = {}) {
+  const response = await fetch(`${ADMIN_API_BASE}${path}`, {
+    cache: 'no-store',
+    credentials: 'same-origin',
+    ...options,
+    headers: {
+      ...(options.body ? { 'content-type': 'application/json' } : {}),
+      ...options.headers,
+    },
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const requestError = new Error(payload.message || '관리자 요청을 처리하지 못했습니다.');
+    requestError.status = response.status;
+    throw requestError;
+  }
+  return payload;
+}
+
+function wireAdminPanel() {
+  const dialog = document.querySelector('#admin-dialog');
+  const openButton = document.querySelector('#admin-login-button');
+  const closeButton = document.querySelector('#admin-close-button');
+  const loginForm = document.querySelector('#admin-login-form');
+  const usagePanel = document.querySelector('#admin-usage');
+  const loginMessage = document.querySelector('#admin-login-message');
+  const usageMessage = document.querySelector('#admin-usage-message');
+  const serviceFilter = document.querySelector('#admin-service-filter');
+  const daysFilter = document.querySelector('#admin-days-filter');
+  const rows = document.querySelector('#admin-usage-rows');
+  let currentPage = 1;
+  let totalPages = 1;
+
+  const showAuthenticated = (authenticated) => {
+    loginForm.hidden = authenticated;
+    usagePanel.hidden = !authenticated;
+    openButton.textContent = authenticated ? '관리 기록' : '관리자';
+  };
+
+  const renderRows = (records) => {
+    rows.replaceChildren();
+    if (records.length === 0) {
+      const row = document.createElement('tr');
+      const cell = document.createElement('td');
+      cell.colSpan = 5;
+      cell.className = 'admin-empty-row';
+      cell.textContent = '선택한 조건의 이용 기록이 없습니다.';
+      row.append(cell);
+      rows.append(row);
+      return;
+    }
+    records.forEach((record) => {
+      const row = document.createElement('tr');
+      [
+        new Date(record.time).toLocaleString('ko-KR'),
+        record.ip,
+        formatAdminService(record.service),
+        `${record.method} ${record.path}`,
+        String(record.status),
+      ].forEach((value) => {
+        const cell = document.createElement('td');
+        cell.textContent = value;
+        row.append(cell);
+      });
+      rows.append(row);
+    });
+  };
+
+  const loadUsage = async (page = currentPage) => {
+    usageMessage.textContent = '이용 기록을 불러오는 중입니다.';
+    try {
+      const query = new URLSearchParams({
+        service: serviceFilter.value,
+        days: daysFilter.value,
+        page: String(page),
+        pageSize: '50',
+      });
+      const data = await adminRequest(`/usage?${query}`);
+      currentPage = data.page;
+      totalPages = data.totalPages;
+      document.querySelector('#admin-total-count').textContent = String(data.total);
+      document.querySelector('#admin-unique-ip-count').textContent = String(data.uniqueIpCount);
+      document.querySelector('#admin-period-label').textContent = `${data.days}일`;
+      document.querySelector('#admin-page-label').textContent = `${currentPage} / ${totalPages}`;
+      document.querySelector('#admin-prev-button').disabled = currentPage <= 1;
+      document.querySelector('#admin-next-button').disabled = currentPage >= totalPages;
+      renderRows(data.records);
+      usageMessage.textContent = `최근 ${data.days}일 기록 ${data.total}건을 관리자 권한으로 조회했습니다.`;
+    } catch (usageError) {
+      if (usageError.status === 401) {
+        showAuthenticated(false);
+        loginMessage.textContent = '세션이 만료되었습니다. 다시 로그인하세요.';
+      } else {
+        usageMessage.textContent = usageError.message;
+      }
+    }
+  };
+
+  openButton.addEventListener('click', async () => {
+    loginMessage.textContent = '';
+    dialog.showModal();
+    try {
+      await adminRequest('/session');
+      showAuthenticated(true);
+      await loadUsage(1);
+    } catch {
+      showAuthenticated(false);
+      document.querySelector('#admin-username').focus();
+    }
+  });
+
+  closeButton.addEventListener('click', () => dialog.close());
+
+  loginForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    loginMessage.textContent = '관리자 인증 중입니다.';
+    const username = document.querySelector('#admin-username').value;
+    const passwordInput = document.querySelector('#admin-password');
+    try {
+      await adminRequest('/session', {
+        method: 'POST',
+        body: JSON.stringify({ username, password: passwordInput.value }),
+      });
+      passwordInput.value = '';
+      loginMessage.textContent = '';
+      showAuthenticated(true);
+      await loadUsage(1);
+    } catch (loginError) {
+      passwordInput.value = '';
+      loginMessage.textContent = loginError.message;
+      passwordInput.focus();
+    }
+  });
+
+  document.querySelector('#admin-refresh-button').addEventListener('click', () => loadUsage(currentPage));
+  serviceFilter.addEventListener('change', () => loadUsage(1));
+  daysFilter.addEventListener('change', () => loadUsage(1));
+  document.querySelector('#admin-prev-button').addEventListener('click', () => loadUsage(Math.max(1, currentPage - 1)));
+  document.querySelector('#admin-next-button').addEventListener('click', () => loadUsage(Math.min(totalPages, currentPage + 1)));
+  document.querySelector('#admin-logout-button').addEventListener('click', async () => {
+    await adminRequest('/session/logout', { method: 'POST' });
+    showAuthenticated(false);
+    rows.replaceChildren();
+    loginMessage.textContent = '로그아웃했습니다.';
+  });
+}
+
 if (typeof document !== 'undefined') {
   wireNavigation();
+  wireAdminPanel();
   checkPortal();
 }
