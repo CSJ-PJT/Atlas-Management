@@ -1,4 +1,5 @@
 import { createHmac, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
+import { realpathSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { fileURLToPath } from 'node:url';
 import { loadUsage } from './access-log.mjs';
@@ -164,7 +165,16 @@ export function configFromEnv(environment = process.env) {
   };
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+function isDirectExecution(entryPath) {
+  if (!entryPath) return false;
+  try {
+    return realpathSync(entryPath) === fileURLToPath(import.meta.url);
+  } catch {
+    return false;
+  }
+}
+
+if (isDirectExecution(process.argv[1])) {
   const host = process.env.ATLAS_ADMIN_HOST || '127.0.0.1';
   const port = Number(process.env.ATLAS_ADMIN_PORT || 3002);
   const server = createAdminServer(configFromEnv());
