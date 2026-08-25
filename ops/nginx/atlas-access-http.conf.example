@@ -1,0 +1,7 @@
+# Include from nginx's http {} context.
+# Deliberately logs the normalized path ($uri), not query strings, so tokens and
+# other query parameters are not retained in the access-observability log.
+log_format atlas_access escape=json
+  '{"time":"$time_iso8601","ip":"$remote_addr","method":"$request_method",'
+  '"uri":"$uri","status":$status,"content_type":"$sent_http_content_type",'
+  '"fetch_dest":"$http_sec_fetch_dest","user_agent":"$http_user_agent"}';
