@@ -10,6 +10,13 @@ import { classifyService, loadUsage, parseAccessLine } from '../server/access-lo
 const sampleLine = (ip, time, target, status = 200) =>
   `${ip} - - [${time}] "GET ${target} HTTP/1.1" ${status} 123 "-" "Mozilla/5.0" "-"`;
 
+const nginxUtcTime = (date = new Date()) => {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const pad = (value) => String(value).padStart(2, '0');
+  return `${pad(date.getUTCDate())}/${months[date.getUTCMonth()]}/${date.getUTCFullYear()}`
+    + `:${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}:${pad(date.getUTCSeconds())} +0000`;
+};
+
 test('Nginx 접근 로그에서 IP, 시간, 서비스와 기능 경로만 추출한다', () => {
   const record = parseAccessLine(sampleLine('203.0.113.7', '25/Aug/2026:09:10:11 +0000', '/sketchfy/room/qa?token=secret'));
   assert.deepEqual(record, {
@@ -57,13 +64,13 @@ test('세션은 서명과 만료를 검증한다', () => {
 
 test('관리자 API는 Origin, 비밀번호 해시와 HttpOnly 세션 뒤에서만 로그를 제공한다', async () => {
   const directory = await mkdtemp(path.join(os.tmpdir(), 'atlas-admin-'));
-  const salt = 'qa-salt';
-  await writeFile(path.join(directory, 'access.log'), sampleLine('203.0.113.9', '25/Aug/2026:09:10:11 +0000', '/health/'));
+  const salt = 'qa-salt-that-is-at-least-thirty-two-bytes';
+  await writeFile(path.join(directory, 'access.log'), sampleLine('203.0.113.9', nginxUtcTime(), '/health/'));
   const server = createAdminServer({
     username: 'admin',
     passwordSalt: salt,
     passwordHash: derivePasswordHash('correct-password', salt),
-    sessionSecret: 'qa-session-secret-at-least-32-bytes',
+    sessionSecret: 'qa-session-secret-that-is-at-least-sixty-four-bytes-long-for-tests',
     allowedOrigin: 'https://atlas.example',
     logDirectory: directory,
   });
@@ -74,6 +81,9 @@ test('관리자 API는 Origin, 비밀번호 해시와 HttpOnly 세션 뒤에서�
   try {
     assert.equal((await fetch(`${base}/usage`)).status, 401);
     assert.equal((await fetch(`${base}/session`, { method: 'POST', body: '{}' })).status, 403);
+    assert.equal((await fetch(`${base}/session`, {
+      method: 'POST', headers: { origin: 'https://atlas.example', 'content-type': 'text/plain' }, body: '{}',
+    })).status, 415);
     const rejected = await fetch(`${base}/session`, {
       method: 'POST', headers: { origin: 'https://atlas.example', 'content-type': 'application/json' },
       body: JSON.stringify({ username: 'admin', password: 'wrong' }),
@@ -98,4 +108,15 @@ test('관리자 API는 Origin, 비밀번호 해시와 HttpOnly 세션 뒤에서�
     await once(server, 'close');
     await rm(directory, { recursive: true, force: true });
   }
+});
+
+test('관리자 API는 약한 세션 비밀과 비밀번호 설정을 거부한다', () => {
+  assert.throws(() => createAdminServer({
+    username: 'admin',
+    passwordSalt: 'short',
+    passwordHash: 'not-a-scrypt-hash',
+    sessionSecret: 'short',
+    allowedOrigin: 'https://atlas.example',
+    logDirectory: '/tmp',
+  }), /weak_config:passwordSalt/);
 });

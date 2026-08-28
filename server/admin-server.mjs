@@ -8,6 +8,7 @@ const COOKIE_NAME = 'atlas_admin_session';
 const SESSION_TTL_SECONDS = 8 * 60 * 60;
 const LOGIN_WINDOW_MS = 15 * 60 * 1_000;
 const LOGIN_ATTEMPT_LIMIT = 5;
+const LOGIN_IDENTITY_LIMIT = 10_000;
 
 function safeEqual(left, right) {
   const leftBuffer = Buffer.from(String(left));
@@ -59,6 +60,8 @@ function json(response, status, payload, headers = {}) {
     'x-content-type-options': 'nosniff',
     'x-frame-options': 'DENY',
     'referrer-policy': 'no-referrer',
+    'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+    'content-security-policy': "default-src 'none'; frame-ancestors 'none'",
     ...headers,
   });
   response.end(body);
@@ -88,6 +91,9 @@ export function createAdminServer(config) {
   for (const key of required) {
     if (!config[key]) throw new Error(`missing_config:${key}`);
   }
+  if (String(config.passwordSalt).length < 32) throw new Error('weak_config:passwordSalt');
+  if (!/^[a-f0-9]{128}$/i.test(String(config.passwordHash))) throw new Error('weak_config:passwordHash');
+  if (String(config.sessionSecret).length < 64) throw new Error('weak_config:sessionSecret');
   const attempts = new Map();
 
   const authenticated = (request) => verifySession(readCookie(request, COOKIE_NAME), config.sessionSecret);
@@ -109,8 +115,20 @@ export function createAdminServer(config) {
         if (!requireOrigin(request, config.allowedOrigin)) {
           return json(response, 403, { message: '허용되지 않은 요청 출처입니다.' });
         }
+        if (!String(request.headers['content-type'] || '').toLowerCase().startsWith('application/json')) {
+          return json(response, 415, { message: 'JSON 요청만 허용됩니다.' });
+        }
         const ip = clientIp(request);
         const now = Date.now();
+        for (const [identity, timestamps] of attempts) {
+          const active = timestamps.filter((timestamp) => now - timestamp < LOGIN_WINDOW_MS);
+          if (active.length) attempts.set(identity, active);
+          else attempts.delete(identity);
+        }
+        if (attempts.size >= LOGIN_IDENTITY_LIMIT && !attempts.has(ip)) {
+          const oldest = attempts.keys().next().value;
+          if (oldest) attempts.delete(oldest);
+        }
         const recent = (attempts.get(ip) || []).filter((timestamp) => now - timestamp < LOGIN_WINDOW_MS);
         if (recent.length >= LOGIN_ATTEMPT_LIMIT) {
           return json(response, 429, { message: '로그인 시도가 너무 많습니다. 15분 후 다시 시도하세요.' });
