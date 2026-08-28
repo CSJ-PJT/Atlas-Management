@@ -142,9 +142,25 @@ test('상단 운영 현황은 숨기되 카드 기능 probe는 유지한다', as
   assert.doesNotMatch(html, /id=["']operations["']/);
   assert.doesNotMatch(html, /href=["']#operations["']/);
   assert.doesNotMatch(html, /서비스 운영 현황/);
+  assert.doesNotMatch(html, /운영 안내/);
+  assert.doesNotMatch(html, /API 상태를 확인하고 있습니다/);
+  assert.equal([...html.matchAll(/class=["']badge service-state["'][^>]*>정상</g)].length, 5);
   assert.match(script, /document\.querySelectorAll\('\[data-service-id\]'\)/);
   assert.match(script, /document\.querySelector\('#portal-status'\)/);
   assert.doesNotMatch(script, /#route-summary|#last-check-summary|#route-summary-icon/);
+});
+
+test('Atlas API는 링크 이동 대신 상태 팝업을 연다', async () => {
+  const [html, script] = await Promise.all([
+    readFile(new URL('../index.html', import.meta.url), 'utf8'),
+    readFile(new URL('../atlas-management.js', import.meta.url), 'utf8'),
+  ]);
+
+  assert.match(html, /id=["']api-status-button["']/);
+  assert.match(html, /<dialog[^>]+id=["']api-status-dialog["']/);
+  assert.doesNotMatch(html, /<a[^>]+href=["']\/api\/health["']/);
+  assert.match(script, /openButton\.addEventListener\('click', \(\) => dialog\.showModal\(\)\)/);
+  assert.match(script, /api-status-dialog-message/);
 });
 
 test('관리자 로그인과 이용 기록 UI는 외부 module 및 보호 API에 연결된다', async () => {

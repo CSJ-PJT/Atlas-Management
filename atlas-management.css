@@ -472,7 +472,7 @@ h1 {
 }
 
 .hero-panel a,
-.api-card a {
+.api-status-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -485,6 +485,61 @@ h1 {
   color: #ffffff;
   font-size: 14px;
   font-weight: 800;
+}
+
+.api-status-button {
+  cursor: pointer;
+  font: inherit;
+}
+
+.api-status-dialog {
+  width: min(430px, calc(100% - 28px));
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  color: var(--text);
+  background: #ffffff;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.28);
+}
+
+.api-status-dialog::backdrop {
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(3px);
+}
+
+.api-status-dialog-head {
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.api-status-dialog-head h2,
+.api-status-dialog-body p {
+  margin: 0;
+}
+
+.api-status-dialog-close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 8px;
+  color: #475569;
+  background: #f1f5f9;
+  font: inherit;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.api-status-dialog-body {
+  padding: 24px 20px 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  line-height: 1.6;
 }
 
 .summary-grid {
@@ -619,7 +674,7 @@ h1 {
 
 .service-card:focus-visible,
 .hero-panel a:focus-visible,
-.api-card a:focus-visible,
+.api-status-button:focus-visible,
 .quick-list a:focus-visible {
   outline: 3px solid rgba(37, 99, 235, 0.22);
   outline-offset: 3px;
@@ -797,7 +852,7 @@ h1 {
   line-height: 1.55;
 }
 
-.api-card a {
+.api-status-button {
   min-height: 38px;
   padding: 0 12px;
   font-size: 13px;

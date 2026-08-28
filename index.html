@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta
       name="description"
       content="Travel, Incruit, Learn, Health, Sketchfy Atlas 서비스를 한곳에서 관리하는 포털입니다."
@@ -10,7 +11,7 @@
     <title>Atlas Management | 아틀라스 관리 포털</title>
     <link rel="icon" type="image/svg+xml" href="/atlas-mark.svg" />
     <link rel="apple-touch-icon" href="/atlas-mark.png" />
-    <link rel="stylesheet" href="/atlas-management.css?v=atlas-admin-v1" />
+    <link rel="stylesheet" href="/atlas-management.css?v=atlas-portal-v2" />
   </head>
   <body>
     <header class="topbar" aria-label="아틀라스 관리 포털 탐색">
@@ -29,7 +30,7 @@
 
       <div class="topbar-meta" aria-label="시스템 상태">
         <span class="status-dot" id="portal-status-dot" aria-hidden="true"></span>
-        <span id="portal-status">서비스 확인 중</span>
+        <span id="portal-status">정상</span>
         <time id="checked-at" datetime="">—</time>
         <button class="admin-login-button" id="admin-login-button" type="button">관리자</button>
       </div>
@@ -148,7 +149,7 @@
                 </ul>
               </div>
               <div class="service-meta">
-                <span class="badge service-state">확인 중</span>
+                <span class="badge service-state">정상</span>
                 <span class="path">/travel/</span>
               </div>
             </a>
@@ -166,7 +167,7 @@
                 </ul>
               </div>
               <div class="service-meta">
-                <span class="badge service-state">확인 중</span>
+                <span class="badge service-state">정상</span>
                 <span class="path">/sketchfy/</span>
               </div>
             </a>
@@ -184,7 +185,7 @@
                 </ul>
               </div>
               <div class="service-meta">
-                <span class="badge service-state">확인 중</span>
+                <span class="badge service-state">정상</span>
                 <span class="path">/jobs/</span>
               </div>
             </a>
@@ -202,7 +203,7 @@
                 </ul>
               </div>
               <div class="service-meta">
-                <span class="badge service-state">확인 중</span>
+                <span class="badge service-state">정상</span>
                 <span class="path">/learn/</span>
               </div>
             </a>
@@ -220,7 +221,7 @@
                 </ul>
               </div>
               <div class="service-meta">
-                <span class="badge service-state">확인 중</span>
+                <span class="badge service-state">정상</span>
                 <span class="path">/health/</span>
               </div>
             </a>
@@ -249,21 +250,24 @@
               <span class="status-dot" id="api-status-dot" aria-hidden="true"></span>
               <strong>Atlas API</strong>
             </div>
-            <p id="api-status">API 상태를 확인하고 있습니다.</p>
-            <a href="/api/health">/api/health</a>
-          </div>
-
-          <div class="planned-card" aria-label="운영 안내">
-            <strong>운영 안내</strong>
-            <p>
-              각 카드는 대표 데이터, 백엔드 상태 또는 공개 자산 계약을 확인합니다. Incruit 데이터가
-              24시간 넘게 갱신되지 않으면 정상 대신 데이터 오래됨으로 표시합니다.
-            </p>
+            <p id="api-status">정상</p>
+            <button class="api-status-button" id="api-status-button" type="button">상태 보기</button>
           </div>
         </aside>
       </section>
     </main>
 
-    <script type="module" src="/atlas-management.js?v=atlas-admin-v1"></script>
+    <dialog class="api-status-dialog" id="api-status-dialog" aria-labelledby="api-status-dialog-title">
+      <div class="api-status-dialog-head">
+        <h2 id="api-status-dialog-title">Atlas API 상태</h2>
+        <button class="api-status-dialog-close" id="api-status-dialog-close" type="button" aria-label="상태 창 닫기">×</button>
+      </div>
+      <div class="api-status-dialog-body">
+        <span class="status-dot" id="api-dialog-status-dot" aria-hidden="true"></span>
+        <p id="api-status-dialog-message">정상</p>
+      </div>
+    </dialog>
+
+    <script type="module" src="/atlas-management.js?v=atlas-portal-v2"></script>
   </body>
 </html>

@@ -202,9 +202,13 @@ async function checkPortal() {
   const apiIndicator = document.querySelector('#api-status-dot');
   const apiResult = await runServiceProbe('travel');
   apiStatus.textContent = apiResult.kind === 'healthy'
-    ? 'API와 필수 외부 서비스 설정이 정상입니다.'
+    ? '정상'
     : apiResult.detail;
   setIndicator(apiIndicator, apiResult.kind);
+  document.querySelector('#api-status-dialog-message').textContent = apiResult.kind === 'healthy'
+    ? 'API와 필수 외부 서비스 설정이 정상입니다.'
+    : apiResult.detail;
+  setIndicator(document.querySelector('#api-dialog-status-dot'), apiResult.kind);
 }
 
 function wireNavigation() {
@@ -215,6 +219,18 @@ function wireNavigation() {
       event.preventDefault();
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
+  });
+}
+
+function wireApiStatusDialog() {
+  const dialog = document.querySelector('#api-status-dialog');
+  const openButton = document.querySelector('#api-status-button');
+  const closeButton = document.querySelector('#api-status-dialog-close');
+
+  openButton.addEventListener('click', () => dialog.showModal());
+  closeButton.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
   });
 }
 
@@ -385,6 +401,7 @@ function wireAdminPanel() {
 
 if (typeof document !== 'undefined') {
   wireNavigation();
+  wireApiStatusDialog();
   wireAdminPanel();
   checkPortal();
 }
