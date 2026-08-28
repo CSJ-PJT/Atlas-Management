@@ -185,10 +185,6 @@ async function checkPortal() {
   const errorCount = results.filter(({ kind }) => kind === 'error').length;
   const checkTime = formatCheckTime();
 
-  document.querySelector('#route-summary').textContent = `${healthyCount} / ${serviceCards.length}`;
-  document.querySelector('#route-summary-detail').textContent =
-    `정상 ${healthyCount}개 · 데이터 오래됨 ${staleCount}개 · 점검 필요 ${errorCount}개`;
-
   const portalStatus = document.querySelector('#portal-status');
   portalStatus.textContent = errorCount > 0
     ? `${errorCount}개 서비스 점검 필요`
@@ -197,12 +193,10 @@ async function checkPortal() {
       : '모든 서비스 기능 정상';
   const overallKind = errorCount > 0 ? 'error' : staleCount > 0 ? 'stale' : 'healthy';
   setIndicator(document.querySelector('#portal-status-dot'), overallKind);
-  setIndicator(document.querySelector('#route-summary-icon'), overallKind);
 
   const checkedAt = document.querySelector('#checked-at');
   checkedAt.textContent = checkTime;
   checkedAt.dateTime = new Date().toISOString();
-  document.querySelector('#last-check-summary').textContent = checkTime;
 
   const apiStatus = document.querySelector('#api-status');
   const apiIndicator = document.querySelector('#api-status-dot');

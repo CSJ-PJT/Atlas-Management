@@ -133,6 +133,20 @@ test('Sketchfy Atlas는 서비스 카드와 바로가기에서 두 번째다', a
   assert.deepEqual(quickOrder, ['travel', 'sketchfy', 'jobs', 'learn', 'health']);
 });
 
+test('상단 운영 현황은 숨기되 카드 기능 probe는 유지한다', async () => {
+  const [html, script] = await Promise.all([
+    readFile(new URL('../index.html', import.meta.url), 'utf8'),
+    readFile(new URL('../atlas-management.js', import.meta.url), 'utf8'),
+  ]);
+
+  assert.doesNotMatch(html, /id=["']operations["']/);
+  assert.doesNotMatch(html, /href=["']#operations["']/);
+  assert.doesNotMatch(html, /서비스 운영 현황/);
+  assert.match(script, /document\.querySelectorAll\('\[data-service-id\]'\)/);
+  assert.match(script, /document\.querySelector\('#portal-status'\)/);
+  assert.doesNotMatch(script, /#route-summary|#last-check-summary|#route-summary-icon/);
+});
+
 test('관리자 로그인과 이용 기록 UI는 외부 module 및 보호 API에 연결된다', async () => {
   const [html, script] = await Promise.all([
     readFile(new URL('../index.html', import.meta.url), 'utf8'),
