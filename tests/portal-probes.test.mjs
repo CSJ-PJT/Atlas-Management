@@ -120,6 +120,7 @@ test('index는 다섯 서비스별 probe id와 외부 module을 연결한다', a
   }
   assert.match(html, /<script\s+type=["']module["']\s+src=["']\/atlas-management\.js(?:\?[^"']+)?["']/);
   assert.doesNotMatch(html, /method:\s*["']HEAD["']/);
+  assert.match(await readFile(new URL('../atlas-management.js', import.meta.url), 'utf8'), /label:\s*["']정상["']/);
 });
 
 test('Sketchfy Atlas는 서비스 카드와 바로가기에서 두 번째다', async () => {

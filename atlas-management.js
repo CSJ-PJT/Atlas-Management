@@ -2,7 +2,7 @@ const PROBE_TIMEOUT_MS = 8_000;
 export const INCRUIT_STALE_AFTER_MS = 24 * 60 * 60 * 1_000;
 const FUTURE_CLOCK_TOLERANCE_MS = 5 * 60 * 1_000;
 
-const healthy = (detail) => ({ kind: 'healthy', label: '사용 가능', detail });
+const healthy = (detail) => ({ kind: 'healthy', label: '정상', detail });
 const stale = (detail) => ({ kind: 'stale', label: '데이터 오래됨', detail });
 const error = (detail) => ({ kind: 'error', label: '점검 필요', detail });
 
